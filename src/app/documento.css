@@ -1,0 +1,163 @@
+/* ===========================================================================
+   AMPARO · El documento.
+   ---------------------------------------------------------------------------
+   CSS plano, no utilidades de Tailwind. Acá las utilidades estorban: la
+   impresión necesita control fino de márgenes, viudas y huérfanas, y saltos
+   de página, y eso no se escribe cómodo en clases sueltas.
+
+   Print CSS en vez de Puppeteer. Es la trampa que más hunde equipos en un
+   hackathon: instalar Chromium, pelear con serverless, y a las 7am no hay
+   PDF. Esto logra lo mismo en pantalla y en papel, y el navegador ya sabe
+   exportar a PDF.
+
+   Acá se rompe la consola oscura a propósito. Lo que se radica ante un juez
+   es un documento, y un documento va sobre papel.
+   =========================================================================== */
+
+.documento {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.75;
+  padding: 56px 64px;
+  border-radius: 20px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.45);
+  /* Ancho de lectura de un documento, no de una pantalla. */
+  max-width: 76ch;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.documento p {
+  margin: 0 0 1.1em;
+  /* Nada de una línea suelta al final o al principio de una página. */
+  orphans: 3;
+  widows: 3;
+}
+
+.documento strong {
+  font-weight: 600;
+}
+
+.doc-centro {
+  text-align: center;
+}
+
+.doc-titulo {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2em;
+}
+
+.doc-norma {
+  font-size: 13px;
+  color: var(--tinta-suave);
+  margin-bottom: 2.4em;
+}
+
+.doc-destinatario {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.6em;
+}
+
+.doc-seccion {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 2em 0 0.9em;
+  page-break-after: avoid;
+}
+
+.doc-cuerpo {
+  white-space: pre-wrap;
+}
+
+/* Enlaces a sentencias. Que se vean como enlaces reales: el clic que abre la
+   sentencia verdadera es el momento del video. */
+.doc-cita {
+  color: var(--verde-700);
+  text-decoration: underline;
+  text-decoration-color: var(--verde-200);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+/* Cuando el recuperador está apagado. Ámbar, nunca rojo: no es un error del
+   sistema, es una decisión declarada. */
+.doc-aviso {
+  background: var(--ambar-50);
+  border-left: 3px solid var(--ambar-300);
+  color: var(--ambar-700);
+  padding: 12px 16px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.doc-firma {
+  margin-top: 2.6em;
+  text-align: left;
+}
+
+.doc-pie {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid var(--linea);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--tinta-suave);
+  text-align: left;
+}
+
+/* ===========================================================================
+   Impresión
+   =========================================================================== */
+
+@media print {
+  /* Solo el documento. La consola no se imprime. */
+  body > *:not(.solo-documento) {
+    display: none !important;
+  }
+
+  .solo-documento,
+  .solo-documento * {
+    visibility: visible;
+  }
+
+  .documento {
+    max-width: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: white;
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  /* En papel un enlace no se puede hacer clic: se imprime al lado. */
+  .doc-cita::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--mono);
+    font-size: 9pt;
+    font-weight: 400;
+    color: #444;
+    text-decoration: none;
+  }
+
+  .doc-cita {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  @page {
+    margin: 2.5cm 2.5cm 2.5cm 3cm; /* margen izquierdo mayor: va perforado */
+    size: letter;
+  }
+}
