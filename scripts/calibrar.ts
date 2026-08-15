@@ -3,96 +3,125 @@
  *
  *   pnpm tsx scripts/calibrar.ts
  *
- * Imprime, para cada consulta de referencia, cómo ordena el corpus REAL y con
- * qué puntaje. Es lo que permite fijar UMBRAL_SIMILITUD con datos en vez de a
- * ojo — un umbral mal puesto rompe el interruptor 1 sin que nadie se entere:
- * el sistema deja de citar (o cita de más) y el demo no demuestra nada.
+ * Fija UMBRAL_SIMILITUD con datos en vez de a ojo. Un umbral mal puesto rompe
+ * el interruptor 1 sin que nadie se entere: el sistema deja de citar, o cita
+ * de más, y el demo no demuestra nada.
  *
- * Se vuelve a correr cada vez que entra o sale una sentencia del corpus.
+ * ---------------------------------------------------------------------------
+ * IMPORTANTE: las consultas salen de construirConsulta() sobre los expedientes
+ * reales, NO de consultas escritas a mano.
+ *
+ * La primera versión de este script las escribía a mano y quedaron parecidas
+ * pero no iguales a las que el sistema produce — les faltaban los términos de
+ * énfasis que agrega la fuerza del caso. El umbral quedó calibrado 0.06 arriba
+ * de donde debía y el motor terminó citando cero sentencias en los dos casos
+ * que sí deben citar. Calibrar contra una consulta aproximada es no calibrar.
+ * ---------------------------------------------------------------------------
  */
 
 import { CORPUS } from '../data/corpus';
 import { Indice, explicarPuntaje } from '../motor/similitud';
-import { UMBRAL_SIMILITUD } from '../motor/recuperador';
-
-/**
- * Consultas de referencia. Se arman como lo hace construirConsulta():
- * servicio · tipo de negación · sujeto de especial protección · énfasis.
- *
- * `debeCitar` es la expectativa humana: qué sentencias TIENEN que salir. Es
- * lo que convierte esto en una calibración y no en una impresión de números.
- */
-const CONSULTAS: { nombre: string; consulta: string; debeCitar: string[] }[] = [
-  {
-    nombre: 'caso 1 · cita con especialista',
-    consulta:
-      'cita con especialista en neurología · no asignación · adulto mayor 71 años · vida digna · perjuicio irremediable · orden del médico tratante',
-    // Solo la específica. T-252/24 es marco general y puntúa 0.207: el
-    // recuperador prefiere una cita exacta a dos vagas, y las descartadas
-    // viajan igual en el certificado con su motivo.
-    debeCitar: ['T-377/24'],
-  },
-  {
-    nombre: 'caso 2 · medicamento',
-    consulta:
-      'entrega de medicamento oncológico · no entrega · enfermedad catastrófica · vida digna · orden del médico tratante',
-    debeCitar: ['T-380/24'],
-  },
-  {
-    nombre: 'caso 3 · improcedente (aún no pidió a la EPS)',
-    consulta:
-      'cita de control con medicina general · no asignación · acceso efectivo al servicio de salud',
-    debeCitar: [],
-  },
-  {
-    nombre: 'fuera de dominio · pensión',
-    consulta: 'reconocimiento de pensión de vejez · negación · mínimo vital',
-    debeCitar: [],
-  },
-];
+import { construirConsulta, UMBRAL_SIMILITUD } from '../motor/recuperador';
+import { calcularFuerza } from '../motor/fuerza';
+import { evaluarProcedibilidad } from '../motor/compuertas';
+import { CASOS } from '../src/fixtures/casos';
+import { fechaCorte } from '../src/lib/entorno';
 
 const indice = new Indice(CORPUS);
 const ancho = Math.max(...CORPUS.map((c) => c.id.length));
+const HOY = fechaCorte();
+
+/** Qué TIENE que citar cada caso. Es la expectativa humana, no un adorno. */
+const ESPERADO: Record<string, string[]> = {
+  'cita-especialista': ['T-377/24'],
+  medicamento: ['T-380/24'],
+  improcedente: [], // no llega a recuperar: las compuertas ya resolvieron
+  'faltan-datos': [],
+};
 
 console.log(`\nCorpus: ${indice.tamano} sentencias · umbral actual ${UMBRAL_SIMILITUD}`);
 console.log('─'.repeat(78));
 
+const techoDeLoQueNoDebe: number[] = [];
+const pisoDeLoQueSiDebe: number[] = [];
 let problemas = 0;
 
-for (const { nombre, consulta, debeCitar } of CONSULTAS) {
-  console.log(`\n${nombre}`);
-  console.log(`  "${consulta.slice(0, 86)}${consulta.length > 86 ? '…' : ''}"`);
+for (const caso of CASOS) {
+  const proc = evaluarProcedibilidad(caso.expediente, HOY);
+  const debe = ESPERADO[caso.id] ?? [];
 
-  const resultados = indice.buscar(consulta);
+  console.log(`\n${caso.id}  (${proc.salida})`);
+
+  if (proc.salida !== 'PROCEDE') {
+    console.log('  no llega al recuperador — las compuertas ya resolvieron');
+    if (debe.length) {
+      console.log(`  ✗ pero se esperaba que citara ${debe.join(', ')}`);
+      problemas += 1;
+    } else {
+      console.log('  ✓ correcto: no se consulta jurisprudencia');
+    }
+    continue;
+  }
+
+  // La consulta REAL, la que el sistema arma de verdad.
+  const consulta = construirConsulta(caso.expediente, calcularFuerza(caso.expediente));
+  console.log(`  "${consulta}"`);
+
   const citadas: string[] = [];
-
-  for (const { sentencia, puntaje } of resultados) {
+  for (const { sentencia, puntaje } of indice.buscar(consulta)) {
     if (puntaje.similitud === 0) continue;
     const pasa = puntaje.similitud >= UMBRAL_SIMILITUD;
     if (pasa) citadas.push(sentencia.id);
+
+    (debe.includes(sentencia.id) ? pisoDeLoQueSiDebe : techoDeLoQueNoDebe).push(
+      puntaje.similitud,
+    );
+
     const barra = '█'.repeat(Math.round(puntaje.similitud * 30));
     console.log(
-      `    ${pasa ? '▸' : ' '} ${sentencia.id.padEnd(ancho)}  ${puntaje.similitud.toFixed(3)}  ${barra}`,
+      `    ${pasa ? '▸' : ' '} ${sentencia.id.padEnd(ancho)} ${puntaje.similitud.toFixed(3)} ${barra}`,
     );
-    console.log(`      ${' '.repeat(ancho)}  └ ${explicarPuntaje(puntaje)}`);
+    console.log(`      ${' '.repeat(ancho)} └ ${explicarPuntaje(puntaje)}`);
   }
-  if (citadas.length === 0) console.log('      (ninguna supera el umbral — no se cita)');
 
-  const faltantes = debeCitar.filter((id) => !citadas.includes(id));
-  const sobrantes = citadas.filter((id) => !debeCitar.includes(id));
+  const faltantes = debe.filter((id) => !citadas.includes(id));
+  const sobrantes = citadas.filter((id) => !debe.includes(id));
   if (faltantes.length) {
     console.log(`  ✗ FALTAN: ${faltantes.join(', ')}`);
     problemas += 1;
   }
   if (sobrantes.length) {
-    console.log(`  ! de más: ${sobrantes.join(', ')}`);
+    console.log(`  ✗ DE MÁS: ${sobrantes.join(', ')}`);
+    problemas += 1;
   }
   if (!faltantes.length && !sobrantes.length) console.log('  ✓ cita exactamente lo esperado');
 }
 
+// ---------------------------------------------------------------------------
+// Recomendación de umbral, calculada de los puntajes reales
+// ---------------------------------------------------------------------------
 console.log(`\n${'─'.repeat(78)}`);
+
+const piso = pisoDeLoQueSiDebe.length ? Math.min(...pisoDeLoQueSiDebe) : NaN;
+const techo = techoDeLoQueNoDebe.length ? Math.max(...techoDeLoQueNoDebe) : NaN;
+
+console.log(`  lo más flojo que SÍ debe citar : ${isNaN(piso) ? '—' : piso.toFixed(3)}`);
+console.log(`  lo más alto que NO debe citar  : ${isNaN(techo) ? '—' : techo.toFixed(3)}`);
+
+if (!isNaN(piso) && !isNaN(techo)) {
+  if (techo >= piso) {
+    console.log('\n  ✗ NO HAY UMBRAL POSIBLE: se solapan. Hay que arreglar etiquetas,');
+    console.log('    no el umbral. Una sentencia que no aplica está puntuando como si aplicara.');
+  } else {
+    const sugerido = Math.round(((piso + techo) / 2) * 100) / 100;
+    console.log(`\n  umbral sugerido (punto medio): ${sugerido.toFixed(2)}`);
+    console.log(`  margen a cada lado: ${((piso - techo) / 2).toFixed(3)}`);
+  }
+}
+
 console.log(
   problemas === 0
-    ? `El umbral ${UMBRAL_SIMILITUD} deja pasar lo que debe.\n`
-    : `${problemas} consulta(s) no citan lo esperado. Ajustar UMBRAL_SIMILITUD o las etiquetas.\n`,
+    ? `\n  El umbral ${UMBRAL_SIMILITUD} deja pasar lo que debe.\n`
+    : `\n  ${problemas} problema(s). Ajustar UMBRAL_SIMILITUD o las etiquetas del corpus.\n`,
 );
+if (problemas > 0) process.exitCode = 1;

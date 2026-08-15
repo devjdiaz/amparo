@@ -73,11 +73,15 @@ export const CORPUS: SentenciaCorpus[] = [
       'Negar el acceso oportuno, continuo y efectivo a los servicios, insumos y tecnologías ordenados por el médico tratante, mediante barreras y restricciones administrativas, vulnera el derecho fundamental a la salud. La afectación es más grave cuando quien la sufre es sujeto de especial protección constitucional.',
     textual:
       'Las EPS accionadas vulneraron el derecho fundamental a la salud de las y los accionantes —sujetos de especial protección constitucional— al negarles el acceso oportuno, continuo y efectivo a los servicios, insumos y tecnologías en salud ordenados por el médico tratante, a partir de barreras y restricciones administrativas.',
+    // Ojo con las etiquetas: 'medico tratante' y 'sujeto de especial
+    // proteccion' son encuadre jurídico, no tema. Aparecen en TODOS los casos
+    // de salud, así que como etiqueta (peso 1.0) hacían que esta sentencia
+    // compitiera de igual a igual con la que sí trata del asunto. Siguen
+    // presentes en `tema` y `subregla`, donde pesan menos y es su lugar.
     etiquetas: [
       'barrera administrativa',
+      'restriccion administrativa',
       'acceso oportuno',
-      'medico tratante',
-      'sujeto de especial proteccion',
       'insumos',
       'negacion de servicio',
     ],
@@ -151,7 +155,6 @@ export const CORPUS: SentenciaCorpus[] = [
       'prescripcion medica',
       'tratamiento integral',
       'negligencia',
-      'sujeto de especial proteccion',
       'enfermeria domiciliaria',
     ],
     verificadaEl: '2026-08-15',
