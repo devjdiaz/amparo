@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340" role="img" aria-labelledby="t d"><title id="t">AMPARO</title><desc id="d">Una A en forma de techo que cubre a una persona.</desc>
+  <defs><clipPath id="piso"><rect x="90" y="10" width="380" height="312"/></clipPath></defs>
+  <g transform="translate(-110 -1.1)">
+    <g clip-path="url(#piso)"><path d="M118.6 380 L280 70 L441.4 380" fill="none" stroke="#0A3B2E" stroke-width="46" stroke-linejoin="miter"/></g>
+    <circle cx="280" cy="222" r="28" fill="#C97A22"/>
+    <path d="M250 322 Q250 256 280 256 Q310 256 310 322 Z" fill="#0A3B2E"/>
+  </g>
+</svg>

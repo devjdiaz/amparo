@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   AMPARO · Sistema de marca
+   ---------------------------------------------------------------------------
+   Los tokens salen literales de "02 Marca/Playbook de marca.md §10".
+   El playbook los declara como :root; Tailwind v4 exige el prefijo --color-*
+   para generar utilidades, así que van declarados en los dos sitios:
+
+     @theme  → genera bg-verde-600, text-tinta, border-linea, ...
+     :root   → los consume documento.css, que es CSS plano con @media print
+
+   DECISIÓN HÍBRIDA (16 ago 2026):
+   La consola de operación va oscura, como el mockup de Pencil. El documento
+   que se entrega —la tutela y el certificado— va en papel. El usuario v1 es
+   el intermediario trabajando en una consola; lo que se radica ante un juez
+   es un papel. Ver "05 Diseño UI/Diseño UI.md".
+   =========================================================================== */
+
+@theme {
+  /* --- Verde jade. El verde es para lo que avanza. ----------------------- */
+  --color-verde-900: #06241c;
+  --color-verde-800: #0a3b2e;
+  --color-verde-700: #0d5643;
+  --color-verde-600: #12735a; /* PRIMARIO: botones, marca, énfasis */
+  --color-verde-400: #4fb394;
+  --color-verde-200: #a8dbc8;
+  --color-verde-50: #eff7f3;
+
+  /* --- Ámbar. El ámbar para lo que se redirige. -------------------------- */
+  --color-ambar-700: #8a4a12;
+  --color-ambar-500: #c97a22; /* ruta alterna, la persona en el logo */
+  --color-ambar-300: #efb569;
+  --color-ambar-50: #fbf0df;
+
+  /* --- Papel y tinta. Nunca blanco puro, nunca #000. --------------------- */
+  --color-papel: #fbf9f4;
+  --color-papel-2: #ffffff;
+  --color-linea: #e3e0d8;
+  --color-tinta-suave: #5a6661;
+  --color-tinta: #14201c;
+
+  /* --- Rojo. ÚNICAMENTE cuando falla el sistema. Jamás sobre la persona. -- */
+  --color-rojo-falla: #a32d2d;
+
+  /* --- Consola oscura. No está en el playbook: sale del mockup de Pencil. - */
+  --color-noche: #000000;
+  --color-superficie: #ffffff0d;
+  --color-superficie-2: #ffffff08;
+  --color-borde-consola: #ffffff12;
+  --color-borde-consola-2: #ffffff1a;
+  --color-texto-consola: #fbf9f4;
+  --color-texto-consola-2: #a09b94;
+  --color-texto-consola-3: #6b6660;
+
+  /* --- Tipografía. Tres roles, tres familias. --------------------------- */
+  --font-serif: var(--fuente-serif), Georgia, serif;
+  --font-sans: var(--fuente-sans), system-ui, sans-serif;
+  --font-mono: var(--fuente-mono), ui-monospace, monospace;
+
+  --radius-amparo: 8px;
+}
+
+:root {
+  /* Espejo crudo para documento.css (print CSS, sin utilidades de Tailwind). */
+  --verde-900: #06241c;
+  --verde-800: #0a3b2e;
+  --verde-700: #0d5643;
+  --verde-600: #12735a;
+  --verde-400: #4fb394;
+  --verde-200: #a8dbc8;
+  --verde-50: #eff7f3;
+  --ambar-700: #8a4a12;
+  --ambar-500: #c97a22;
+  --ambar-300: #efb569;
+  --ambar-50: #fbf0df;
+  --papel: #fbf9f4;
+  --papel-2: #ffffff;
+  --linea: #e3e0d8;
+  --tinta-suave: #5a6661;
+  --tinta: #14201c;
+  --rojo-falla: #a32d2d;
+  --radio: 8px;
+  --toque-min: 48px;
+}
+
+/* ===========================================================================
+   Base
+   =========================================================================== */
+
+body {
+  /* La consola. El documento se sirve sobre papel dentro de su propio marco. */
+  background: var(--color-noche);
+  color: var(--color-texto-consola);
+  font-family: var(--font-sans);
+  /* Cuerpo a 16px es innegociable: usuarios mayores, pantallas rayadas. */
+  font-size: 16px;
+  line-height: 26px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Altura mínima de toque: 48px, no 40. Hay gente radicando esto con las
+   manos temblando. Playbook §7. */
+button,
+[role='switch'],
+a[data-boton] {
+  min-height: var(--toque-min);
+}
+
+/* Nunca color solo: todo estado lleva además texto o ícono. El foco tiene
+   que verse en pantallas destrozadas por el sol. */
+:focus-visible {
+  outline: 2px solid var(--color-verde-400);
+  outline-offset: 2px;
+}

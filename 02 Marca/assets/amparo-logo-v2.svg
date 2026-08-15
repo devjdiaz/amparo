@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="t d">
+  <title id="t">AMPARO</title>
+  <desc id="d">Una A en forma de techo que cubre a una persona.</desc>
+
+  <!-- ELIMINAR esta capa para el archivo final. El logo no debe llevar fondo propio. -->
+  <rect width="1200" height="520" fill="#FBF9F4"/>
+
+  <defs>
+    <clipPath id="piso">
+      <rect x="430" y="60" width="340" height="272"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#piso)">
+    <path d="M466 400 L600 90 L734 400"
+          fill="none"
+          stroke="#0A3B2E"
+          stroke-width="36"
+          stroke-linejoin="miter"/>
+  </g>
+
+  <circle cx="600" cy="214" r="19" fill="#C97A22"/>
+  <path d="M580 332 Q580 242 600 242 Q620 242 620 332 Z" fill="#0A3B2E"/>
+
+  <text x="600" y="430"
+        text-anchor="middle"
+        font-family="'Source Serif 4', Georgia, serif"
+        font-size="86"
+        font-weight="600"
+        letter-spacing="2"
+        fill="#0A3B2E">AMPARO</text>
+
+  <text x="600" y="478"
+        text-anchor="middle"
+        font-family="Inter, Arial, sans-serif"
+        font-size="26"
+        letter-spacing="0.3"
+        fill="#0D5643">Justicia al alcance de todos.</text>
+</svg>

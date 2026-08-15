@@ -1,0 +1,29 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+
+# Obsidian — versiona la config compartida, ignora estado local de la app
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+
+# Arsenal — GarantÍA y sus notas de análisis.
+# Este repo es público (es la entrega del hackathon). El arsenal es referencia
+# interna del equipo: el repo de otro proyecto y el desarme de por qué ganó.
+# Sigue vivo en el vault de Obsidian; simplemente no se publica.
+06 Arsenal/

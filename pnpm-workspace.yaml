@@ -1,0 +1,7 @@
+# pnpm 11 lee su configuración desde acá, no desde package.json.
+# Sin esto, esbuild no compila su binario nativo y vitest no arranca.
+allowBuilds:
+  esbuild: true
+  '@tailwindcss/oxide': true
+  sharp: true
+  unrs-resolver: true
