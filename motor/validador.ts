@@ -40,7 +40,27 @@ export interface Validacion {
   sentenciasEnTexto: string[];
 }
 
-/** Corta en oraciones sin romperse con abreviaturas jurídicas comunes. */
+/**
+ * Ordinales de numeración jurídica. `PRIMERO.` no es una afirmación: es la
+ * etiqueta del párrafo que viene. Si se cuenta como oración propia, queda sin
+ * marca, el validador la rechaza, y el documento se recorta entero.
+ */
+const RE_ORDINAL =
+  /^(PRIMER[OA]|SEGUND[OA]|TERCER[OA]|CUART[OA]|QUINT[OA]|SEXT[OA]|S\u00c9PTIM[OA]|SEPTIM[OA]|OCTAV[OA]|NOVEN[OA]|D\u00c9CIM[OA]|DECIM[OA])\.?$/i;
+
+/**
+ * Corta en oraciones sin romperse con abreviaturas jur\u00eddicas comunes.
+ *
+ * Dos cosas que aprendimos a la mala con el modelo de verdad:
+ *
+ *   1. `PRIMERO.` se separaba como oraci\u00f3n propia y quedaba sin marca.
+ *   2. Cuando el modelo pon\u00eda la marca DESPU\u00c9S del punto, quedaba una
+ *      "oraci\u00f3n" que era solo `[#h6]`, y su oraci\u00f3n real sin respaldo. El
+ *      recorte dej\u00f3 un documento hecho \u00fanicamente de marcas.
+ *
+ * Las dos se resuelven al pegar: un ordinal se une a lo que sigue, y una
+ * marca suelta se une a lo que la precede.
+ */
 export function partirEnAfirmaciones(texto: string): string[] {
   const protegido = texto
     .replace(/\bart\./gi, 'art\u0000')
@@ -48,10 +68,31 @@ export function partirEnAfirmaciones(texto: string): string[] {
     .replace(/\bEE\.\s?UU\./g, 'EE\u0000UU\u0000')
     .replace(/\bC\.P\./g, 'C\u0000P\u0000');
 
-  return protegido
+  const crudas = protegido
     .split(/(?<=[.:;])\s+|\n+/)
     .map((s) => s.replace(/\u0000/g, '.').trim())
     .filter((s) => s.length > 0);
+
+  const unidas: string[] = [];
+  for (const trozo of crudas) {
+    const soloMarcas =
+      trozo.replace(new RegExp(RE_MARCA.source, 'g'), '').replace(/[.\s]/g, '') === '';
+
+    if (soloMarcas && unidas.length > 0) {
+      // Marca que qued\u00f3 suelta detr\u00e1s del punto: pertenece a la anterior.
+      unidas[unidas.length - 1] = `${unidas[unidas.length - 1]} ${trozo}`.trim();
+      continue;
+    }
+    if (unidas.length > 0 && RE_ORDINAL.test(unidas[unidas.length - 1])) {
+      // El ordinal etiqueta lo que sigue; van juntos.
+      unidas[unidas.length - 1] = `${unidas[unidas.length - 1]} ${trozo}`.trim();
+      continue;
+    }
+    unidas.push(trozo);
+  }
+
+  // Un ordinal que qued\u00f3 al final sin nada detr\u00e1s no afirma nada.
+  return unidas.filter((s) => !RE_ORDINAL.test(s));
 }
 
 function normalizarSentencia(s: string): string {

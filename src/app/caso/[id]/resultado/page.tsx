@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { decidir } from '@/lib/decidir';
+import { redactar } from '@/lib/redactor';
 import { redactarDeterministico } from '@/lib/redactor-deterministico';
 import { casoPorId, CASOS } from '@/fixtures/casos';
 import { fechaCorte } from '@/lib/entorno';
@@ -30,6 +31,28 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
   const d = decidir(caso.expediente, caso.hechos, { casoId: caso.id, hoy: fechaCorte() });
   const enrutando = d.salida !== 'PROCEDE';
 
+  /**
+   * El texto del modelo se genera EN EL BUILD y queda horneado en el HTML.
+   *
+   * Es el precaché, gratis: la página es estática, así que `pnpm build` llama
+   * a Claude una vez por caso y lo que se despliega ya trae el texto adentro.
+   * El día del demo no se toca la red, la pantalla carga instantánea, y el
+   * interruptor 2 conmuta entre dos textos que ya están los dos en el cliente.
+   *
+   * Si en el build no hay llave o la llamada falla, `redactar()` devuelve el
+   * determinístico con su motivo y nada se rompe.
+   */
+  const redaccion =
+    d.salida === 'PROCEDE'
+      ? await redactar({
+          expediente: caso.expediente,
+          memoria: caso.memoria,
+          fuerza: d.fuerza,
+          recuperacion: d.recuperacion,
+          forzarModelo: true,
+        })
+      : null;
+
   return (
     <main
       className="min-h-dvh"
@@ -54,11 +77,12 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           recuperacion: d.recuperacion,
           rutas: d.rutas,
           preguntas: d.preguntas,
-          // El redactor con modelo entra en el siguiente bloque. Mientras
-          // tanto el determinístico cubre los dos lados del interruptor, que
-          // es exactamente para lo que existe.
-          textoConLlm: null,
+          // Los dos textos viajan juntos al cliente: conmutar el interruptor
+          // no dispara nada, solo cambia cuál se pinta.
+          textoConLlm: redaccion?.fuente === 'modelo' ? redaccion.texto : null,
           textoSinLlm: redactarDeterministico(caso.expediente, d.fuerza),
+          validacion: redaccion?.validacion ?? null,
+          motivoFallback: redaccion?.motivoFallback,
           entidad: valor(caso.expediente.entidad) ?? 'la EPS',
           servicio: valor(caso.expediente.servicio) ?? 'el servicio de salud requerido',
         }}

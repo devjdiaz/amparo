@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { FileSearch } from 'lucide-react';
 import type { Procedibilidad, RutaAlterna } from '../../../motor/compuertas';
 import type { Recuperacion } from '../../../motor/recuperador';
+import type { Validacion } from '../../../motor/validador';
+import { Aduana } from './aduana';
 import { Interruptores, type EstadoInterruptores } from './interruptores';
 import { PanelJurisprudencia } from './jurisprudencia';
 import { NoProcede } from './no-procede';
@@ -31,6 +33,10 @@ export interface DatosResultado {
   textoConLlm: string | null;
   /** Texto de plantilla, sin modelo. Es el que corre si todo falla. */
   textoSinLlm: string;
+  /** Qué dijo la aduana sobre el texto del modelo. Null si no corrió. */
+  validacion: Validacion | null;
+  /** Si se intentó el modelo y no se usó, por qué. Nunca se silencia. */
+  motivoFallback?: string;
   /** Datos de encabezado del documento. */
   entidad: string;
   servicio: string;
@@ -77,6 +83,14 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
           <PanelJurisprudencia
             recuperacion={recuperacionEfectiva}
             recuperadorActivo={estado.recuperadorActivo}
+          />
+        )}
+
+        {datos.salida === 'PROCEDE' && (
+          <Aduana
+            validacion={datos.validacion}
+            llmActivo={estado.llmActivo}
+            motivoFallback={datos.motivoFallback}
           />
         )}
 

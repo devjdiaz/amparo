@@ -78,6 +78,22 @@
   white-space: pre-wrap;
 }
 
+/* Marca de trazabilidad. En pantalla es un superíndice discreto —como la nota
+   al pie de un documento serio— que dice de qué hecho salió cada afirmación.
+   En papel desaparece: ahí la trazabilidad va en el certificado adjunto. */
+.doc-marca {
+  font-family: var(--mono);
+  font-size: 0.62em;
+  color: var(--verde-600);
+  background: var(--verde-50);
+  border-radius: 3px;
+  padding: 0 3px;
+  margin-left: 2px;
+  cursor: help;
+  vertical-align: super;
+  line-height: 0;
+}
+
 /* Enlaces a sentencias. Que se vean como enlaces reales: el clic que abre la
    sentencia verdadera es el momento del video. */
 .doc-cita {
@@ -139,6 +155,12 @@
     background: white;
     font-size: 12pt;
     line-height: 1.6;
+  }
+
+  /* Las marcas no van al papel. El juez recibe un escrito limpio; la
+     trazabilidad viaja en el certificado que se adjunta. */
+  .doc-marca {
+    display: none;
   }
 
   /* En papel un enlace no se puede hacer clic: se imprime al lado. */

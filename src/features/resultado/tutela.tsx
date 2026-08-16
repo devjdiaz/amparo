@@ -72,7 +72,9 @@ export function Tutela({
         </p>
 
         {/* El texto redactado: por el modelo, o por plantilla si está apagado. */}
-        <div className="doc-cuerpo">{texto}</div>
+        <div className="doc-cuerpo">
+          <ConMarcas texto={texto} />
+        </div>
 
         {citadas.length > 0 && (
           <>
@@ -129,4 +131,34 @@ export function Tutela({
 /** La subregla empieza en mayúscula; dentro de la frase va en minúscula. */
 function desmayuscular(s: string): string {
   return s.charAt(0).toLowerCase() + s.slice(1);
+}
+
+/**
+ * Pinta las marcas de trazabilidad como superíndices.
+ *
+ * Las marcas `[#h1]` existen para el validador, no para quien lee. Dejarlas
+ * crudas en el documento se ve a medio hacer, y un escrito que va ante un juez
+ * no puede verse a medio hacer.
+ *
+ * Pero borrarlas del todo sería tirar el argumento: que cada afirmación diga
+ * de qué hecho salió ES el producto. Así que en pantalla quedan como un
+ * superíndice discreto —como la nota al pie de un documento serio— y en papel
+ * desaparecen, porque ahí la trazabilidad vive en el certificado adjunto.
+ */
+function ConMarcas({ texto }: { texto: string }) {
+  const trozos = texto.split(/(\[#[a-zA-Z0-9_-]+\])/g);
+
+  return (
+    <>
+      {trozos.map((t, i) => {
+        const marca = /^\[#([a-zA-Z0-9_-]+)\]$/.exec(t);
+        if (!marca) return <span key={i}>{t}</span>;
+        return (
+          <sup key={i} className="doc-marca" title={`Sustentado en el hecho ${marca[1]}`}>
+            {marca[1]}
+          </sup>
+        );
+      })}
+    </>
+  );
 }
