@@ -23,6 +23,9 @@ export interface RutaAlterna {
   generable: boolean;  // si AMPARO puede redactarlo ahora mismo
 }
 
+/** Qué tipo de control usar para capturar la respuesta de seguimiento. */
+export type TipoCampoPreguntable = 'booleano' | 'fecha';
+
 export interface ResultadoCompuerta {
   regla: 'legitimacion' | 'inmediatez' | 'subsidiariedad' | 'no_temeridad';
   veredicto: Veredicto;
@@ -35,6 +38,10 @@ export interface ResultadoCompuerta {
   excepcion?: string;
   /** Solo si INDETERMINADO. Es la pregunta exacta que hay que hacerle. */
   pregunta?: string;
+  /** Solo si INDETERMINADO. El campo exacto del Expediente que falta. */
+  campo?: keyof Expediente;
+  /** Solo si INDETERMINADO. Qué control mostrar para responder. */
+  tipoCampo?: TipoCampoPreguntable;
   /** Solo si FALLA. Nunca un no seco. */
   ruta?: RutaAlterna;
 }
@@ -54,6 +61,8 @@ function indeterminado(
   regla: ResultadoCompuerta['regla'],
   pregunta: string,
   fundamento: string,
+  campo: keyof Expediente,
+  tipoCampo: TipoCampoPreguntable,
 ): ResultadoCompuerta {
   return {
     regla,
@@ -62,6 +71,8 @@ function indeterminado(
     fundamento,
     hechos: [],
     pregunta,
+    campo,
+    tipoCampo,
   };
 }
 
@@ -78,6 +89,8 @@ export function legitimacion(exp: Expediente): ResultadoCompuerta {
       'legitimacion',
       '¿La persona afectada es la misma que va a firmar la tutela?',
       FUND,
+      'solicitanteEsTitular',
+      'booleano',
     );
   }
 
@@ -97,6 +110,8 @@ export function legitimacion(exp: Expediente): ResultadoCompuerta {
       'legitimacion',
       '¿La persona afectada está en condiciones de presentar la tutela por sí misma?',
       FUND,
+      'titularPuedeActuarPorSiMismo',
+      'booleano',
     );
   }
 
@@ -139,7 +154,13 @@ export function inmediatez(exp: Expediente, hoy: Date): ResultadoCompuerta {
   const fecha = valor(exp.fechaVulneracion);
 
   if (fecha === null) {
-    return indeterminado('inmediatez', '¿Cuándo fue que le negaron el servicio?', FUND);
+    return indeterminado(
+      'inmediatez',
+      '¿Cuándo fue que le negaron el servicio?',
+      FUND,
+      'fechaVulneracion',
+      'fecha',
+    );
   }
 
   const dias = diasEntre(fecha, hoy);
@@ -152,6 +173,8 @@ export function inmediatez(exp: Expediente, hoy: Date): ResultadoCompuerta {
       fundamento: FUND,
       hechos: ids(exp.fechaVulneracion),
       pregunta: '¿Me confirma la fecha en que le negaron el servicio?',
+      campo: 'fechaVulneracion',
+      tipoCampo: 'fecha',
     };
   }
 
@@ -167,7 +190,13 @@ export function inmediatez(exp: Expediente, hoy: Date): ResultadoCompuerta {
 
   const continua = valor(exp.vulneracionContinua);
   if (continua === null) {
-    return indeterminado('inmediatez', '¿Le siguen negando el servicio hoy?', FUND);
+    return indeterminado(
+      'inmediatez',
+      '¿Le siguen negando el servicio hoy?',
+      FUND,
+      'vulneracionContinua',
+      'booleano',
+    );
   }
 
   if (continua === true) {
@@ -225,6 +254,8 @@ export function subsidiariedad(exp: Expediente): ResultadoCompuerta {
       'subsidiariedad',
       '¿Su salud se está deteriorando o tiene dolor mientras espera?',
       FUND,
+      'urgenciaClinica',
+      'booleano',
     );
   }
 
@@ -234,6 +265,8 @@ export function subsidiariedad(exp: Expediente): ResultadoCompuerta {
       'subsidiariedad',
       '¿Ya pidió el servicio por escrito a la EPS y le respondieron?',
       FUND,
+      'solicitudFormalPrevia',
+      'booleano',
     );
   }
 
@@ -277,6 +310,8 @@ export function noTemeridad(exp: Expediente): ResultadoCompuerta {
       'no_temeridad',
       '¿Ya había puesto una tutela antes por este mismo problema?',
       FUND,
+      'tutelaPreviaMismosHechos',
+      'booleano',
     );
   }
 
@@ -296,6 +331,8 @@ export function noTemeridad(exp: Expediente): ResultadoCompuerta {
       'no_temeridad',
       '¿Pasó algo nuevo después de esa primera tutela?',
       FUND,
+      'hechosNuevos',
+      'booleano',
     );
   }
 
@@ -332,13 +369,23 @@ export function noTemeridad(exp: Expediente): ResultadoCompuerta {
 
 export type Salida = 'PROCEDE' | 'NO_PROCEDE' | 'FALTAN_DATOS';
 
+/** Una pregunta pendiente, con el campo exacto del Expediente que responde. */
+export interface PreguntaPendiente {
+  regla: ResultadoCompuerta['regla'];
+  campo: keyof Expediente;
+  tipoCampo: TipoCampoPreguntable;
+  pregunta: string;
+}
+
 export interface Procedibilidad {
   salida: Salida;
   compuertas: ResultadoCompuerta[];
   /** Solo en NO_PROCEDE. */
   rutas: RutaAlterna[];
-  /** Solo en FALTAN_DATOS. */
+  /** Solo en FALTAN_DATOS. Se mantiene por compatibilidad con lo que ya la consume. */
   preguntas: string[];
+  /** Solo en FALTAN_DATOS. La versión estructurada y auditable de `preguntas`. */
+  preguntasDetalle: PreguntaPendiente[];
 }
 
 export function evaluarProcedibilidad(exp: Expediente, hoy = new Date()): Procedibilidad {
@@ -361,6 +408,7 @@ export function evaluarProcedibilidad(exp: Expediente, hoy = new Date()): Proced
       compuertas,
       rutas: fallas.map((f) => f.ruta!).filter(Boolean),
       preguntas: [],
+      preguntasDetalle: [],
     };
   }
 
@@ -370,8 +418,14 @@ export function evaluarProcedibilidad(exp: Expediente, hoy = new Date()): Proced
       compuertas,
       rutas: [],
       preguntas: dudas.map((d) => d.pregunta!),
+      preguntasDetalle: dudas.map((d) => ({
+        regla: d.regla,
+        campo: d.campo!,
+        tipoCampo: d.tipoCampo!,
+        pregunta: d.pregunta!,
+      })),
     };
   }
 
-  return { salida: 'PROCEDE', compuertas, rutas: [], preguntas: [] };
+  return { salida: 'PROCEDE', compuertas, rutas: [], preguntas: [], preguntasDetalle: [] };
 }

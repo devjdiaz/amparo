@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FileSearch } from 'lucide-react';
-import type { Procedibilidad, RutaAlterna } from '../../../motor/compuertas';
+import type { Procedibilidad, PreguntaPendiente, RutaAlterna } from '../../../motor/compuertas';
 import type { Recuperacion } from '../../../motor/recuperador';
 import type { Validacion } from '../../../motor/validador';
 import type { Expediente } from '../../../motor/tipos';
@@ -30,6 +30,8 @@ export interface DatosResultado {
   recuperacion: Recuperacion | null;
   rutas: RutaAlterna[];
   preguntas: string[];
+  preguntasDetalle: PreguntaPendiente[];
+  esReferencia: boolean;
   /** Texto redactado por el modelo. Null mientras el redactor no exista. */
   textoConLlm: string | null;
   /** Texto de plantilla, sin modelo. Es el que corre si todo falla. */
@@ -84,7 +86,13 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
             expediente={datos.expediente}
           />
         )}
-        {datos.salida === 'FALTAN_DATOS' && <FaltanDatos preguntas={datos.preguntas} />}
+        {datos.salida === 'FALTAN_DATOS' && (
+          <FaltanDatos
+            casoId={datos.casoId}
+            esReferencia={datos.esReferencia}
+            preguntasDetalle={datos.preguntasDetalle}
+          />
+        )}
       </div>
 
       <aside className="flex w-full flex-col gap-6 lg:w-[420px] lg:shrink-0">

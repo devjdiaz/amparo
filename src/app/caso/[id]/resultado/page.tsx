@@ -97,6 +97,8 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           recuperacion: d.recuperacion,
           rutas: d.rutas,
           preguntas: d.preguntas,
+          preguntasDetalle: d.procedibilidad.preguntasDetalle,
+          esReferencia: caso.esReferencia,
           // Los dos textos viajan juntos al cliente: conmutar el interruptor
           // no dispara nada, solo cambia cuál se pinta.
           textoConLlm: redaccion?.fuente === 'modelo' ? redaccion.texto : null,
