@@ -96,7 +96,9 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
           />
         )}
 
-        <Interruptores estado={estado} onCambio={setEstado} />
+        {datos.salida === 'PROCEDE' && (
+          <Interruptores estado={estado} onCambio={setEstado} />
+        )}
 
         <Link
           href={`/caso/${datos.casoId}/certificado`}

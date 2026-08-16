@@ -23,8 +23,8 @@ Aplica la paleta y tipografía de [[Playbook de marca]] y da forma visual a las 
 
 Fondo oscuro (única pantalla que rompe la regla de "fondo papel siempre" — es la portada, antes de entrar al flujo de documento). Botón de micrófono central en `verde-600` con glow, alternativa de texto libre, y la placa de datos de impacto: **312.500 tutelas en salud (2025) · 74,3% tasa de concesión · 34% del total nacional · +162% crecimiento 2020–2025** — los mismos datos de [[Documento maestro#3 · El problema y sus fuentes]].
 
-> [!note] Contradice el playbook en un punto
-> [[Playbook de marca#9 · Lo que AMPARO no es visualmente]] dice "modo oscuro como principal: no". Esta pantalla es oscura. Vale la pena decidir a propósito si es una portada-excepción (pantalla de "bienvenida", antes del documento) o si hay que llevarla a `papel` para ser consistentes. Revisar antes de grabar el video.
+> [!note] Contradice el playbook en un punto — resuelto
+> [[Playbook de marca#9 · Lo que AMPARO no es visualmente]] dice "modo oscuro como principal: no". Esta pantalla es oscura a propósito: es la portada-excepción (pantalla de "bienvenida", antes de entrar al flujo de documento en `papel`), no el modo principal. Así quedó implementado en `src/features/entrada/grabador.tsx` — no es una inconsistencia pendiente.
 
 ### 02 · Análisis
 
@@ -38,16 +38,15 @@ Stepper de 4 pasos (Entrada → Hechos → Procedibilidad → Resultado). Dos co
 
 El documento en sí (`ACCIÓN DE TUTELA`, encabezado `SEÑOR JUEZ DE TUTELA (REPARTO)`, secciones `I. HECHOS` / `II. FUNDAMENTOS DE DERECHO`), con jurisprudencia citada mostrando **relevancia %** por sentencia (T-760/08 · T-121/15 · T-259/19) — esto es la salida de `filtrarCandidatas` en `motor/recuperador.ts`.
 
-**Interruptores de auditoría**, panel lateral con tres toggles:
+**Interruptores de auditoría**, panel lateral. El mockup dibujaba tres toggles; lo que se implementó en `src/features/resultado/interruptores.tsx` son dos, y el tercero quedó resuelto como navegación, no como switch:
 
 | Toggle | Qué controla |
 |---|---|
 | Recuperador de jurisprudencia | Citas de sentencias reales con enlace |
 | Modelo de lenguaje (LLM) | Redacción asistida por IA |
-| Modo auditoría completa | Muestra cada decisión del motor |
 
-> [!warning] Discrepancia con la documentación de producto
-> [[00 Inicio#Los tres interruptores (lo más importante de la demo)]] y [[Documento maestro#4 · Tesis arquitectónica]] describen el tercer interruptor como **"Caso improcedente"** (cambiar de caso, no un toggle de UI). Este mockup en cambio pone **"Modo auditoría completa"** como tercer toggle, y el caso improcedente vive aparte como pantalla 04. Antes de grabar el video hay que decidir cuál de las dos versiones es la real y alinear el guion — probablemente el mockup es el diseño correcto y el caso improcedente se demuestra navegando a otra pantalla, no con un switch.
+> [!note] Discrepancia con el mockup — resuelta a favor de la documentación de producto
+> [[00 Inicio#Los tres interruptores (lo más importante de la demo)]] y [[Documento maestro#4 · Tesis arquitectónica]] describen el tercer interruptor como **"Caso improcedente"** (cambiar de caso, no un toggle de UI). Así quedó implementado: dos toggles en vivo (`estado.recuperadorActivo`, `estado.llmActivo` en `src/features/resultado/vista.tsx`) y el caso improcedente se demuestra navegando a la pantalla 04, no con un tercer switch. El panel de interruptores solo se muestra en pantallas `PROCEDE` — en `NO_PROCEDE`/`FALTAN_DATOS` no tendría efecto visible, así que se oculta en vez de quedar inerte.
 
 ### 04 · Caso Improcedente
 
@@ -77,6 +76,6 @@ No es la app — es la referencia visual que el scaffold de Next.js (ver [[Stack
 
 ## Pendientes que salen de revisar este mockup
 
-- [ ] Decidir si "01 · Entrada de Voz" se queda oscura como portada o se lleva a `papel` para no romper la regla de marca
-- [ ] Alinear el guion del video y la documentación de producto con el tercer interruptor real: ¿"Modo auditoría completa" (como está acá) o "Caso improcedente" (como dice el resto de la documentación)?
+- [x] Decidir si "01 · Entrada de Voz" se queda oscura como portada o se lleva a `papel` — se quedó oscura, portada-excepción deliberada
+- [x] Alinear el guion del video y la documentación de producto con el tercer interruptor real — quedaron dos toggles en vivo; "caso improcedente" se demuestra navegando a otra pantalla
 - [ ] Portar los 5 layouts a componentes reales de Next.js usando los tokens de [[Playbook de marca#10 · Tokens listos para pegar]] en vez de hex-codes sueltos en clases Tailwind

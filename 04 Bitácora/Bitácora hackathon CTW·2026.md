@@ -254,9 +254,9 @@ Más del 90% de la población usa celular. Lo que falta es conexión: solo alred
 
 ## Pendientes
 
-- [ ] Decidir el nombre final: `AMPARO` a secas o conservar la IA. Recomendación: quitarla. El logo está trazado a curvas y regenerarlo requiere volver a correr el generador.
-- [ ] Definir los pesos numéricos de las cuatro reglas de procedibilidad
-- [ ] Armar el corpus de 200–400 sentencias T- de salud
-- [ ] Escribir la suite de tres casos de referencia antes que el LLM
+- [x] Decidir el nombre final: `AMPARO` a secas. Confirmado — cero residuos de "AMPARO IA" en código, metadata o UI (verificado por grep del repo completo).
+- [x] Definir los pesos numéricos de las cuatro reglas de procedibilidad — obsoleto: la arquitectura implementada es conjuntiva pura, sin pesos ni sumas (ver comentario en `motor/compuertas.ts`). Este pendiente ya no aplica.
+- [ ] Armar el corpus de 200–400 sentencias T- de salud — quedó en 7, recortado por tiempo. Verificado suficiente para los 4 casos de referencia del video (cada uno cita con margen sobre el umbral de similitud); no alcanza para preguntas fuera de guion del jurado.
+- [x] Escribir la suite de tres casos de referencia antes que el LLM — son 4 (`src/fixtures/casos.ts`: cita-especialista, medicamento, improcedente, faltan-datos), los 4 verificados de punta a punta con llamadas reales.
 - [ ] Verificar vigencia de cada norma antes de meterla al corpus
 - [ ] Elegir el track en el formulario de registro

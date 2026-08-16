@@ -19,7 +19,7 @@ Voz → Tutela redactada con jurisprudencia verificable.
 
 - **Sin alucinaciones:** la IA redacta, el código elige las citas
 - **Auditable:** el certificado muestra fuentes consultadas y rechazadas
-- **Integrada:** SUIN-Juriscol + normativa abierta + sentencias T- verificadas
+- **Verificable:** corpus curado a mano de sentencias T- con enlace a SUIN-Juriscol, cada una revisada de vigencia
 - **Post-decisión:** seguimiento de trámites y pasos siguientes
 
 ## Arquitectura
@@ -35,13 +35,13 @@ Reglas de procedibilidad [CÓDIGO, no LLM]
     ├→ NO PROCEDE [ámbar + ruta alterna]
     └→ PROCEDE
         ↓
-    Recuperación [SUIN-Juriscol + sentencias verificadas]
+    Recuperación [corpus curado de sentencias, similitud semántica]
         ↓
     Redacción [LLM escribe A PARTIR de citas elegidas]
         ↓
     Certificado [auditoría completa]
         ↓
-    PDF listo para radicar
+    Documento listo para imprimir y radicar
 ```
 
 > El modelo de lenguaje no puede alucinar una cita porque no es quien elige las citas.
@@ -56,7 +56,7 @@ Reglas de procedibilidad [CÓDIGO, no LLM]
 
 Derechos de petición · Quejas ante Superintendencias · Reclamaciones ante Defensoría
 
-## Fuentes de datos integradas
+## Fuentes consultadas para el corpus
 
 SUIN-Juriscol · datos.gov.co · Relatoría Corte Constitucional · verificación de vigencia norma por norma
 

@@ -1,4 +1,4 @@
-import { Download, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 import type { Candidata } from '../../../motor/recuperador';
 
 /**
@@ -56,8 +56,7 @@ export function Tutela({
           className="flex items-center gap-2 rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700"
         >
           <Printer className="size-4" aria-hidden />
-          Descargar para radicar
-          <Download className="size-3.5" aria-hidden />
+          Imprimir para radicar
         </button>
       </header>
 
