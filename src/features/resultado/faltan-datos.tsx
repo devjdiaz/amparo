@@ -15,7 +15,7 @@ import { MessageCircleQuestion } from 'lucide-react';
 export function FaltanDatos({ preguntas }: { preguntas: string[] }) {
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-[28px] border border-[#FFFFFF26] bg-[#FFFFFF0D] p-7">
+      <section className="rounded-[28px] border border-[#14201C26] bg-[#14201C0D] p-7">
         <h1 className="font-serif text-[22px] font-semibold text-texto-consola">
           {/* El verbo concuerda con el número: "Me falta un dato" / "Me faltan 3 datos". */}
           {preguntas.length === 1
@@ -38,7 +38,7 @@ export function FaltanDatos({ preguntas }: { preguntas: string[] }) {
           {preguntas.map((p, i) => (
             <li
               key={p}
-              className="flex items-start gap-4 rounded-[18px] bg-[#FFFFFF0D] p-5 outline outline-[#FFFFFF12]"
+              className="flex items-start gap-4 rounded-[18px] bg-[#14201C0D] p-5 outline outline-[#14201C12]"
             >
               <span
                 className="grid size-8 shrink-0 place-items-center rounded-full bg-[#12735A33] font-mono text-[12px] text-verde-400"

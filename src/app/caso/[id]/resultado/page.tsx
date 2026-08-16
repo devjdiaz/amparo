@@ -71,7 +71,7 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           : 'radial-gradient(ellipse 70% 70% at 30% 50%, #12735A08 0%, #00000000 100%)',
       }}
     >
-      <header className="sticky top-0 z-10 flex items-center gap-8 border-b border-[#FFFFFF0D] bg-[#FFFFFF08] px-10 py-4 backdrop-blur-xl print:hidden">
+      <header className="sticky top-0 z-10 flex items-center gap-8 border-b border-[#14201C0D] bg-[#14201C08] px-10 py-4 backdrop-blur-xl print:hidden">
         <Link href="/" aria-label="Volver al inicio">
           <Marca />
         </Link>

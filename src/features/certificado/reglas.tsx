@@ -24,7 +24,7 @@ export function ReglasDeclaradas() {
     >
       <ul className="flex flex-col gap-3">
         {reglas.map((r) => (
-          <li key={r.etiqueta} className="rounded-[14px] bg-[#FFFFFF08] p-3.5">
+          <li key={r.etiqueta} className="rounded-[14px] bg-[#14201C08] p-3.5">
             <div className="flex items-baseline gap-3">
               <span className="font-mono text-[15px] font-bold text-verde-400">
                 {r.valor}

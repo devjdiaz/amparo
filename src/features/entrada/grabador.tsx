@@ -208,9 +208,9 @@ export function Grabador() {
       {!trabajando && fase.t !== 'grabando' && (
         <>
           <div className="flex w-[400px] items-center gap-4" aria-hidden>
-            <span className="h-px flex-1 bg-[#FFFFFF15]" />
+            <span className="h-px flex-1 bg-[#14201C15]" />
             <span className="text-[13px] text-texto-consola-3">o</span>
-            <span className="h-px flex-1 bg-[#FFFFFF15]" />
+            <span className="h-px flex-1 bg-[#14201C15]" />
           </div>
 
           <form
@@ -220,7 +220,7 @@ export function Grabador() {
               if (texto.trim().length >= 20) enviar(null);
             }}
           >
-            <label className="flex items-center gap-3 rounded-[22px] bg-[#FFFFFF0D] px-5 py-3.5 outline outline-[#FFFFFF15] focus-within:outline-verde-400">
+            <label className="flex items-center gap-3 rounded-[22px] bg-[#14201C0D] px-5 py-3.5 outline outline-[#14201C15] focus-within:outline-verde-400">
               <PenLine className="size-[18px] shrink-0 text-texto-consola-3" aria-hidden />
               <span className="sr-only">Escriba los hechos de su caso</span>
               <input

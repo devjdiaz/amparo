@@ -26,7 +26,7 @@ export function Panel({
 
   return (
     <section
-      className={`flex flex-col gap-5 rounded-[28px] bg-[#FFFFFF0A] p-6 outline outline-[#FFFFFF12] ${className}`}
+      className={`flex flex-col gap-5 rounded-[28px] bg-[#14201C0A] p-6 outline outline-[#14201C12] ${className}`}
     >
       <header className="flex items-center gap-3">
         {icono && <span className={`shrink-0 ${color}`}>{icono}</span>}
@@ -49,7 +49,7 @@ export function Insignia({
   const estilos = {
     verde: 'bg-[#12735A33] text-verde-400',
     ambar: 'bg-[#C97A2226] text-ambar-300',
-    neutro: 'bg-[#FFFFFF12] text-texto-consola-2',
+    neutro: 'bg-[#14201C12] text-texto-consola-2',
   }[acento];
 
   return (
@@ -74,12 +74,12 @@ export function Tarjeta({
   const borde = {
     pasa: 'outline-[#4FB39444]',
     falla: 'outline-[#EFB56944]',
-    duda: 'outline-[#FFFFFF22]',
-    neutro: 'outline-[#FFFFFF12]',
+    duda: 'outline-[#14201C22]',
+    neutro: 'outline-[#14201C12]',
   }[estado];
 
   return (
-    <div className={`rounded-[18px] bg-[#FFFFFF0D] p-4 outline ${borde} ${className}`}>
+    <div className={`rounded-[18px] bg-[#14201C0D] p-4 outline ${borde} ${className}`}>
       {children}
     </div>
   );

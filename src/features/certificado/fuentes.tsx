@@ -46,7 +46,7 @@ export function PanelFuentes({
             {recuperacion.citadas.map((c) => (
               <li
                 key={c.sentencia.id}
-                className="flex items-center gap-3 rounded-[14px] bg-[#FFFFFF08] px-3.5 py-2.5"
+                className="flex items-center gap-3 rounded-[14px] bg-[#14201C08] px-3.5 py-2.5"
               >
                 <a
                   href={c.sentencia.url}
@@ -61,7 +61,7 @@ export function PanelFuentes({
             ))}
 
             {recuperacion.descartadas.map((d) => (
-              <li key={d.id} className="rounded-[14px] bg-[#FFFFFF08] px-3.5 py-2.5">
+              <li key={d.id} className="rounded-[14px] bg-[#14201C08] px-3.5 py-2.5">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-[12px] text-texto-consola-2">{d.id}</span>
                   <span className="ml-auto font-mono text-[11px] text-texto-consola-3">

@@ -85,7 +85,7 @@ export function PanelJurisprudencia({
       )}
 
       {citadas.map((c) => (
-        <article key={c.sentencia.id} className="rounded-[18px] bg-[#FFFFFF0D] p-4">
+        <article key={c.sentencia.id} className="rounded-[18px] bg-[#14201C0D] p-4">
           <header className="flex items-center gap-2">
             <Scale className="size-4 shrink-0 text-verde-400" aria-hidden />
             <a
@@ -122,7 +122,7 @@ export function PanelJurisprudencia({
 
       {/* --- Lo que se miró y NO entró. Nunca se silencia. ----------------- */}
       {descartadas.length > 0 && (
-        <details className="rounded-[18px] bg-[#FFFFFF08] p-4">
+        <details className="rounded-[18px] bg-[#14201C08] p-4">
           <summary className="cursor-pointer text-[12px] text-texto-consola-2">
             {descartadas.length} sentencias evaluadas y descartadas
           </summary>

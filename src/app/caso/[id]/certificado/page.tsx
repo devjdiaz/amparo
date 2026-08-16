@@ -62,7 +62,7 @@ export default async function CertificadoPage({
           'radial-gradient(ellipse 70% 70% at 70% 30%, #12735A0A 0%, #00000000 100%)',
       }}
     >
-      <header className="sticky top-0 z-10 flex items-center gap-6 border-b border-[#FFFFFF0D] bg-[#FFFFFF08] px-10 py-4 backdrop-blur-xl">
+      <header className="sticky top-0 z-10 flex items-center gap-6 border-b border-[#14201C0D] bg-[#14201C08] px-10 py-4 backdrop-blur-xl">
         <Link href="/" aria-label="Volver al inicio">
           <Marca />
         </Link>
@@ -82,7 +82,7 @@ export default async function CertificadoPage({
       <div className="flex items-start gap-6 p-10">
         {/* --- Columna principal ---------------------------------------- */}
         <div className="flex min-w-0 flex-1 flex-col gap-6">
-          <section className="rounded-[28px] bg-[#FFFFFF0A] p-7 outline outline-[#FFFFFF12]">
+          <section className="rounded-[28px] bg-[#14201C0A] p-7 outline outline-[#14201C12]">
             <h1 className="font-serif text-[22px] font-semibold text-texto-consola">
               Certificado de auditoría
             </h1>
@@ -102,7 +102,7 @@ export default async function CertificadoPage({
               {metadatos.map((m) => {
                 const Icono = m.icono;
                 return (
-                  <div key={m.etiqueta} className="rounded-[14px] bg-[#FFFFFF08] p-3.5">
+                  <div key={m.etiqueta} className="rounded-[14px] bg-[#14201C08] p-3.5">
                     <div className="flex items-center gap-2 text-texto-consola-3">
                       <Icono className="size-3.5" aria-hidden />
                       <span className="font-mono text-[9px] tracking-wide">{m.etiqueta}</span>

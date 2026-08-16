@@ -47,7 +47,7 @@ const PINTA: Record<
   INDETERMINADO: {
     icono: CircleHelp,
     color: 'text-texto-consola-2',
-    chip: 'bg-[#FFFFFF12] text-texto-consola-2',
+    chip: 'bg-[#14201C12] text-texto-consola-2',
     estado: 'duda',
   },
 };
@@ -80,7 +80,7 @@ export function PanelCompuertas({ proc }: { proc: Procedibilidad }) {
                     <h3 className="text-[14px] font-semibold text-texto-consola">
                       {NOMBRE[c.regla]}
                     </h3>
-                    <span className="rounded-[4px] bg-[#FFFFFF12] px-1.5 py-0.5 font-mono text-[9px] tracking-wide text-texto-consola-3">
+                    <span className="rounded-[4px] bg-[#14201C12] px-1.5 py-0.5 font-mono text-[9px] tracking-wide text-texto-consola-3">
                       BLOQUEANTE
                     </span>
                   </div>
@@ -135,9 +135,9 @@ function Veredicto({ proc }: { proc: Procedibilidad }) {
     FALTAN_DATOS: {
       titulo: 'Me faltan datos para decidir',
       sub: `Son ${proc.preguntas.length} preguntas y le escribo la tutela`,
-      fondo: 'bg-[#FFFFFF0D] border-[#FFFFFF26]',
+      fondo: 'bg-[#14201C0D] border-[#14201C26]',
       texto: 'text-texto-consola',
-      circulo: 'bg-[#FFFFFF26]',
+      circulo: 'bg-[#14201C26]',
       icono: CircleHelp,
     },
   }[proc.salida];

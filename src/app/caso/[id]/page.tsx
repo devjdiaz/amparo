@@ -38,7 +38,7 @@ export default async function Analisis({ params }: { params: Promise<{ id: strin
           'radial-gradient(ellipse 70% 70% at 80% 20%, #12735A0A 0%, #00000000 100%)',
       }}
     >
-      <header className="sticky top-0 z-10 flex items-center gap-8 border-b border-[#FFFFFF0D] bg-[#FFFFFF08] px-10 py-4 backdrop-blur-xl">
+      <header className="sticky top-0 z-10 flex items-center gap-8 border-b border-[#14201C0D] bg-[#14201C08] px-10 py-4 backdrop-blur-xl">
         <Link href="/" aria-label="Volver al inicio">
           <Marca />
         </Link>

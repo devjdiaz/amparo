@@ -137,7 +137,11 @@
    =========================================================================== */
 
 @media print {
-  /* Solo el documento. La consola no se imprime. */
+  /* Solo el documento. La consola no se imprime, ni su fondo. */
+  body {
+    background: white !important;
+  }
+
   body > *:not(.solo-documento) {
     display: none !important;
   }

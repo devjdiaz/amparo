@@ -31,7 +31,7 @@ export function RutaDecision({ pasos }: { pasos: PasoRuta[] }) {
               <p className="text-[13px] font-semibold text-texto-consola">
                 {p.paso}
                 {p.esCompuerta && (
-                  <span className="ml-2 rounded-[4px] bg-[#FFFFFF12] px-1.5 py-0.5 font-mono text-[9px] tracking-wide text-texto-consola-3">
+                  <span className="ml-2 rounded-[4px] bg-[#14201C12] px-1.5 py-0.5 font-mono text-[9px] tracking-wide text-texto-consola-3">
                     COMPUERTA
                   </span>
                 )}

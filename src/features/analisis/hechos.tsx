@@ -42,7 +42,7 @@ export function PanelHechos({
       className="flex-1"
     >
       {/* La transcripción cruda, tal como se dijo. */}
-      <div className="rounded-[18px] bg-[#FFFFFF08] p-4">
+      <div className="rounded-[18px] bg-[#14201C08] p-4">
         <div className="mb-2 flex items-center gap-2 text-[11px] uppercase tracking-wide text-texto-consola-3">
           <AudioLines className="size-3.5" aria-hidden />
           Transcripción
@@ -54,7 +54,7 @@ export function PanelHechos({
         {hechos.map((h, i) => {
           const Icono = ICONO[h.origen.tipo];
           return (
-            <li key={h.id} className="flex gap-3 rounded-[18px] bg-[#FFFFFF0D] p-4">
+            <li key={h.id} className="flex gap-3 rounded-[18px] bg-[#14201C0D] p-4">
               <span
                 className="grid size-6 shrink-0 place-items-center rounded-full bg-[#12735A33] font-mono text-[11px] text-verde-400"
                 aria-hidden

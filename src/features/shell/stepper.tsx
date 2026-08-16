@@ -40,7 +40,7 @@ export function Stepper({
                 className={`grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-semibold ${
                   completado || esActivo
                     ? `${esActivo ? acento.circulo : 'bg-verde-600'} text-papel`
-                    : 'bg-[#FFFFFF1A] text-texto-consola-3'
+                    : 'bg-[#14201C1A] text-texto-consola-3'
                 }`}
                 aria-hidden
               >
@@ -60,7 +60,7 @@ export function Stepper({
               </span>
             </div>
             {i < PASOS.length - 1 && (
-              <span className="h-px w-6 bg-[#FFFFFF1A]" aria-hidden />
+              <span className="h-px w-6 bg-[#14201C1A]" aria-hidden />
             )}
           </li>
         );

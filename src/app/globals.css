@@ -43,15 +43,15 @@
   /* --- Rojo. ÚNICAMENTE cuando falla el sistema. Jamás sobre la persona. -- */
   --color-rojo-falla: #a32d2d;
 
-  /* --- Consola oscura. No está en el playbook: sale del mockup de Pencil. - */
-  --color-noche: #000000;
-  --color-superficie: #ffffff0d;
-  --color-superficie-2: #ffffff08;
-  --color-borde-consola: #ffffff12;
-  --color-borde-consola-2: #ffffff1a;
-  --color-texto-consola: #fbf9f4;
-  --color-texto-consola-2: #a09b94;
-  --color-texto-consola-3: #6b6660;
+  /* --- Consola clara. Fondo: background_amparo.png (16 ago 2026). --------- */
+  --color-noche: #fbf9f4;
+  --color-superficie: #14201c0d;
+  --color-superficie-2: #14201c08;
+  --color-borde-consola: #14201c12;
+  --color-borde-consola-2: #14201c1a;
+  --color-texto-consola: #14201c;
+  --color-texto-consola-2: #4a534e;
+  --color-texto-consola-3: #767d78;
 
   /* --- Tipografía. Tres roles, tres familias. --------------------------- */
   --font-serif: var(--fuente-serif), Georgia, serif;
@@ -90,7 +90,10 @@
 
 body {
   /* La consola. El documento se sirve sobre papel dentro de su propio marco. */
-  background: var(--color-noche);
+  background:
+    linear-gradient(#fbf9f4d9, #fbf9f4d9),
+    url('/background-amparo.png') fixed center / cover no-repeat,
+    var(--color-noche);
   color: var(--color-texto-consola);
   font-family: var(--font-sans);
   /* Cuerpo a 16px es innegociable: usuarios mayores, pantallas rayadas. */

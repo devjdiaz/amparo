@@ -57,7 +57,7 @@ export function Interruptores({
           return (
             <div
               key={c.clave}
-              className="flex items-start gap-4 rounded-[18px] bg-[#FFFFFF0D] p-4 outline outline-[#FFFFFF12]"
+              className="flex items-start gap-4 rounded-[18px] bg-[#14201C0D] p-4 outline outline-[#14201C12]"
             >
               <div className="flex min-w-0 flex-col gap-1">
                 <p className="text-[13px] font-semibold text-texto-consola">{c.titulo}</p>
@@ -73,7 +73,7 @@ export function Interruptores({
                 aria-label={c.titulo}
                 onClick={() => onCambio({ ...estado, [c.clave]: !encendido })}
                 className={`ml-auto mt-0.5 flex h-[22px] w-10 shrink-0 items-center rounded-full p-[2px] transition-colors ${
-                  encendido ? 'bg-verde-400' : 'bg-[#FFFFFF26]'
+                  encendido ? 'bg-verde-400' : 'bg-[#14201C26]'
                 }`}
                 style={{ minHeight: 22 }}
               >
