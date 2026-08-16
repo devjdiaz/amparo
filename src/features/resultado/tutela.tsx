@@ -38,13 +38,13 @@ export function Tutela({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex items-center gap-3 print:hidden">
-        <FileText className="size-[18px] text-verde-400" aria-hidden />
-        <h1 className="font-serif text-[17px] font-semibold text-texto-consola">
+      <header className="flex flex-wrap items-center gap-3 print:hidden">
+        <FileText className="size-[18px] shrink-0 text-verde-400" aria-hidden />
+        <h1 className="font-serif text-[16px] font-semibold text-texto-consola sm:text-[17px]">
           Tutela lista para radicar
         </h1>
 
-        <span className="ml-auto flex items-center gap-2 rounded-full bg-[#4FB39426] px-3 py-1">
+        <span className="ml-auto flex shrink-0 items-center gap-2 rounded-full bg-[#4FB39426] px-3 py-1">
           <span className="size-1.5 rounded-full bg-verde-400" aria-hidden />
           <span className="font-mono text-[11px] text-verde-400">PROCEDE</span>
         </span>
@@ -53,7 +53,7 @@ export function Tutela({
           type="button"
           data-boton
           onClick={() => window.print()}
-          className="flex items-center gap-2 rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700 sm:w-auto sm:justify-start"
         >
           <Printer className="size-4" aria-hidden />
           Imprimir para radicar

@@ -62,7 +62,7 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
     datos.procedibilidad.compuertas.find((c) => c.veredicto === 'FALLA')?.motivo ?? '';
 
   return (
-    <div className="flex items-start gap-6 p-10">
+    <div className="flex flex-col gap-6 p-4 sm:p-6 md:p-10 lg:flex-row lg:items-start">
       <div className="min-w-0 flex-1">
         {datos.salida === 'PROCEDE' && (
           <Tutela
@@ -80,7 +80,7 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
         {datos.salida === 'FALTAN_DATOS' && <FaltanDatos preguntas={datos.preguntas} />}
       </div>
 
-      <aside className="flex w-[420px] shrink-0 flex-col gap-6">
+      <aside className="flex w-full flex-col gap-6 lg:w-[420px] lg:shrink-0">
         {datos.salida === 'PROCEDE' && (
           <PanelJurisprudencia
             recuperacion={recuperacionEfectiva}

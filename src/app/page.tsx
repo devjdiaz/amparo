@@ -26,27 +26,27 @@ export default function Inicio() {
           'radial-gradient(ellipse 60% 60% at 50% 45%, #12735A18 0%, #00000000 100%)',
       }}
     >
-      <header className="flex items-center px-10 py-7">
+      <header className="flex items-center px-4 py-5 sm:px-6 sm:py-7 md:px-10">
         <Marca />
       </header>
 
-      <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 pb-16">
+      <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 pb-12 sm:px-6 sm:pb-16">
         <Grabador />
 
-        <p className="flex items-center gap-2 text-[13px] text-texto-consola-3">
-          <AudioLines className="size-4" aria-hidden />
-          El artículo 86 de la Constitución dice que la tutela no requiere abogado.
+        <p className="flex w-full items-center justify-center gap-2 px-2 text-center text-[13px] text-texto-consola-3">
+          <AudioLines className="size-4 shrink-0" aria-hidden />
+          <span>El artículo 86 de la Constitución dice que la tutela no requiere abogado.</span>
         </p>
       </div>
 
       {/* --- Los datos que sostienen el proyecto ------------------------- */}
-      <footer className="flex justify-center gap-12 border-t border-borde-consola px-10 py-7">
+      <footer className="grid grid-cols-2 gap-x-4 gap-y-5 border-t border-borde-consola px-4 py-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-12 sm:gap-y-4 sm:px-10 sm:py-7">
         {DATOS.map((d) => (
-          <div key={d.etiqueta} className="flex flex-col items-center gap-1">
-            <span className="font-mono text-[16px] font-bold text-verde-400">
+          <div key={d.etiqueta} className="flex w-full flex-col items-center gap-1 text-center">
+            <span className="w-full font-mono text-[16px] font-bold text-verde-400">
               {d.valor}
             </span>
-            <span className="text-[12px] text-texto-consola-3">{d.etiqueta}</span>
+            <span className="w-full text-[12px] text-texto-consola-3">{d.etiqueta}</span>
           </div>
         ))}
       </footer>

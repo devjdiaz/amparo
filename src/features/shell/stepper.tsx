@@ -24,30 +24,30 @@ export function Stepper({
       : { pill: 'bg-[#12735A33]', circulo: 'bg-verde-600', texto: 'text-verde-400' };
 
   return (
-    <ol className="flex items-center gap-3">
+    <ol className="flex min-w-0 items-center gap-1.5 overflow-x-auto sm:gap-3">
       {PASOS.map((paso, i) => {
         const completado = i < indiceActivo;
         const esActivo = i === indiceActivo;
 
         return (
-          <li key={paso} className="flex items-center gap-3">
+          <li key={paso} className="flex shrink-0 items-center gap-1.5 sm:gap-3">
             <div
-              className={`flex items-center gap-2 rounded-full px-3 py-1.5 ${
+              className={`flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 sm:gap-2 sm:px-3 sm:py-1.5 ${
                 esActivo ? acento.pill : ''
               }`}
             >
               <span
-                className={`grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-semibold ${
+                className={`grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-semibold sm:size-6 sm:text-[11px] ${
                   completado || esActivo
                     ? `${esActivo ? acento.circulo : 'bg-verde-600'} text-papel`
                     : 'bg-[#14201C1A] text-texto-consola-3'
                 }`}
                 aria-hidden
               >
-                {completado ? <Check className="size-3.5" strokeWidth={3} /> : i + 1}
+                {completado ? <Check className="size-3 sm:size-3.5" strokeWidth={3} /> : i + 1}
               </span>
               <span
-                className={`text-[13px] ${
+                className={`whitespace-nowrap text-[11px] sm:text-[13px] ${
                   esActivo
                     ? `font-semibold ${acento.texto}`
                     : completado
@@ -60,7 +60,7 @@ export function Stepper({
               </span>
             </div>
             {i < PASOS.length - 1 && (
-              <span className="h-px w-6 bg-[#14201C1A]" aria-hidden />
+              <span className="h-px w-3 shrink-0 bg-[#14201C1A] sm:w-6" aria-hidden />
             )}
           </li>
         );

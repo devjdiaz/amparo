@@ -71,11 +71,13 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           : 'radial-gradient(ellipse 70% 70% at 30% 50%, #12735A08 0%, #00000000 100%)',
       }}
     >
-      <header className="sticky top-0 z-10 flex items-center gap-8 border-b border-[#14201C0D] bg-[#14201C08] px-10 py-4 backdrop-blur-xl print:hidden">
-        <Link href="/" aria-label="Volver al inicio">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-[#14201C0D] bg-[#14201C08] px-4 py-3 backdrop-blur-xl print:hidden sm:gap-6 sm:px-6 md:gap-8 md:px-10 md:py-4">
+        <Link href="/" aria-label="Volver al inicio" className="shrink-0">
           <Marca />
         </Link>
-        <Stepper activo="Resultado" tono={enrutando ? 'ambar' : 'verde'} />
+        <div className="min-w-0 flex-1">
+          <Stepper activo="Resultado" tono={enrutando ? 'ambar' : 'verde'} />
+        </div>
       </header>
 
       <VistaResultado

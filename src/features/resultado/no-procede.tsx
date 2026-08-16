@@ -54,7 +54,7 @@ export function NoProcede({
           return (
             <article
               key={ruta.accion}
-              className={`flex items-start gap-4 rounded-[18px] border p-5 ${
+              className={`flex flex-wrap items-start gap-4 rounded-[18px] border p-4 sm:p-5 ${
                 destacada
                   ? 'border-[#EFB56944] bg-[#C97A2218]'
                   : 'border-[#4FB39444] bg-[#12735A18]'
@@ -68,7 +68,7 @@ export function NoProcede({
                 <Icono className="size-5 text-papel" aria-hidden />
               </span>
 
-              <div className="flex min-w-0 flex-col gap-2">
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <h3 className="text-[15px] font-semibold text-texto-consola">{ruta.accion}</h3>
                 <p className="text-[14px] leading-6 text-texto-consola-2">{ruta.comoSeHace}</p>
                 {ruta.plazo && (
@@ -80,7 +80,7 @@ export function NoProcede({
                 <button
                   type="button"
                   data-boton
-                  className="ml-auto flex shrink-0 items-center gap-2 self-center rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700"
+                  className="flex w-full shrink-0 items-center justify-center gap-2 rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700 sm:ml-auto sm:w-auto sm:self-center"
                 >
                   Generar
                   <ArrowRight className="size-3.5" aria-hidden />

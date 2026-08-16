@@ -65,7 +65,7 @@ export function PanelCompuertas({ proc }: { proc: Procedibilidad }) {
         </Insignia>
       }
       acento={proc.salida === 'PROCEDE' ? 'verde' : 'ambar'}
-      className="w-[440px] shrink-0"
+      className="w-full lg:w-[440px] lg:shrink-0"
     >
       <div className="flex flex-col gap-3">
         {proc.compuertas.map((c) => {

@@ -26,11 +26,13 @@ export function Panel({
 
   return (
     <section
-      className={`flex flex-col gap-5 rounded-[28px] bg-[#14201C0A] p-6 outline outline-[#14201C12] ${className}`}
+      className={`flex flex-col gap-5 rounded-[20px] bg-[#14201C0A] p-4 outline outline-[#14201C12] sm:rounded-[28px] sm:p-6 ${className}`}
     >
-      <header className="flex items-center gap-3">
+      <header className="flex flex-wrap items-center gap-x-3 gap-y-2">
         {icono && <span className={`shrink-0 ${color}`}>{icono}</span>}
-        <h2 className="font-serif text-[17px] font-semibold text-texto-consola">{titulo}</h2>
+        <h2 className="font-serif text-[16px] font-semibold text-texto-consola sm:text-[17px]">
+          {titulo}
+        </h2>
         {insignia && <div className="ml-auto">{insignia}</div>}
       </header>
       {children}

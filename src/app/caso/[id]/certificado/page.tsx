@@ -62,28 +62,28 @@ export default async function CertificadoPage({
           'radial-gradient(ellipse 70% 70% at 70% 30%, #12735A0A 0%, #00000000 100%)',
       }}
     >
-      <header className="sticky top-0 z-10 flex items-center gap-6 border-b border-[#14201C0D] bg-[#14201C08] px-10 py-4 backdrop-blur-xl">
-        <Link href="/" aria-label="Volver al inicio">
+      <header className="sticky top-0 z-10 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[#14201C0D] bg-[#14201C08] px-4 py-3 backdrop-blur-xl sm:gap-x-6 sm:px-6 md:px-10 md:py-4">
+        <Link href="/" aria-label="Volver al inicio" className="shrink-0">
           <Marca />
         </Link>
         <Link
           href={`/caso/${caso.id}/resultado`}
-          className="flex items-center gap-2 text-[13px] text-texto-consola-2 hover:text-texto-consola"
+          className="flex shrink-0 items-center gap-2 text-[13px] text-texto-consola-2 hover:text-texto-consola"
         >
           <ArrowLeft className="size-4" aria-hidden />
           Volver al resultado
         </Link>
-        <span className="ml-auto flex items-center gap-2 rounded-full bg-[#12735A22] px-4 py-1.5">
+        <span className="ml-auto flex shrink-0 items-center gap-2 rounded-full bg-[#12735A22] px-4 py-1.5">
           <ShieldCheck className="size-4 text-verde-400" aria-hidden />
           <span className="font-mono text-[11px] text-verde-400">Certificado verificable</span>
         </span>
       </header>
 
-      <div className="flex items-start gap-6 p-10">
+      <div className="flex flex-col gap-6 p-4 sm:p-6 md:p-10 lg:flex-row lg:items-start">
         {/* --- Columna principal ---------------------------------------- */}
         <div className="flex min-w-0 flex-1 flex-col gap-6">
-          <section className="rounded-[28px] bg-[#14201C0A] p-7 outline outline-[#14201C12]">
-            <h1 className="font-serif text-[22px] font-semibold text-texto-consola">
+          <section className="rounded-[20px] bg-[#14201C0A] p-5 outline outline-[#14201C12] sm:rounded-[28px] sm:p-7">
+            <h1 className="font-serif text-[20px] font-semibold text-texto-consola sm:text-[22px]">
               Certificado de auditoría
             </h1>
             <p className="mt-2 max-w-[64ch] text-[14px] leading-6 text-texto-consola-2">
@@ -98,7 +98,7 @@ export default async function CertificadoPage({
               aparece en el éxito no es auditoría.
             </p>
 
-            <div className="mt-6 grid grid-cols-3 gap-3">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {metadatos.map((m) => {
                 const Icono = m.icono;
                 return (
@@ -121,7 +121,7 @@ export default async function CertificadoPage({
         </div>
 
         {/* --- Columna de fuentes y huella ------------------------------ */}
-        <aside className="flex w-[420px] shrink-0 flex-col gap-6">
+        <aside className="flex w-full flex-col gap-6 lg:w-[420px] lg:shrink-0">
           <PanelFuentes recuperacion={d.recuperacion} corpusVencido={d.corpusVencido} />
           <QueNoSeUso
             llmActivo={c.interruptores.llmActivo}
