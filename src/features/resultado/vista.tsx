@@ -53,8 +53,10 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
 
   // Con el LLM apagado sale el texto determinístico. El veredicto —que ya se
   // calculó arriba, sin modelo— no se mueve ni un milímetro.
-  const texto =
-    estado.llmActivo && datos.textoConLlm ? datos.textoConLlm : datos.textoSinLlm;
+  // El interruptor pide el texto del modelo; que exista es otra cosa. Si el
+  // build no pudo generarlo, sale el determinístico y se DICE que salió ese.
+  const usaModelo = estado.llmActivo && datos.textoConLlm !== null;
+  const texto = usaModelo ? datos.textoConLlm! : datos.textoSinLlm;
 
   const motivoFalla =
     datos.procedibilidad.compuertas.find((c) => c.veredicto === 'FALLA')?.motivo ?? '';
@@ -67,7 +69,7 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
             texto={texto}
             citadas={recuperacionEfectiva?.citadas ?? []}
             recuperadorActivo={estado.recuperadorActivo}
-            llmActivo={estado.llmActivo}
+            redactadoPor={usaModelo ? 'modelo' : 'deterministica'}
             entidad={datos.entidad}
             servicio={datos.servicio}
           />

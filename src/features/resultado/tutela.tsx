@@ -17,14 +17,22 @@ export function Tutela({
   texto,
   citadas,
   recuperadorActivo,
-  llmActivo,
+  redactadoPor,
   entidad,
   servicio,
 }: {
   texto: string;
   citadas: Candidata[];
   recuperadorActivo: boolean;
-  llmActivo: boolean;
+  /**
+   * Qué escribió el texto DE VERDAD, no qué dice el interruptor.
+   *
+   * Son cosas distintas: el interruptor puede estar encendido y el modelo no
+   * haber corrido igual —sin llave, sin red, o porque su redacción no pasó la
+   * aduana—. El pie de un documento que va ante un juez no puede decir
+   * "asistida por modelo" cuando ningún modelo la tocó.
+   */
+  redactadoPor: 'modelo' | 'deterministica';
   entidad: string;
   servicio: string;
 }) {
@@ -120,7 +128,9 @@ export function Tutela({
 
         <p className="doc-pie">
           Documento generado por AMPARO ·{' '}
-          {llmActivo ? 'redacción asistida por modelo' : 'redacción determinística, sin modelo'} ·
+          {redactadoPor === 'modelo'
+            ? 'redacción asistida por modelo, auditada frase por frase'
+            : 'redacción determinística, sin modelo'} ·
           la decisión de procedibilidad no depende del modelo
         </p>
       </article>
