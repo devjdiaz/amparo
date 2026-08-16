@@ -68,22 +68,39 @@ export function ExperienciaFutureSelf({
       cuerpo.append('audio', audio, 'voz.webm');
       cuerpo.append('mensaje', mensaje);
 
-      const controlador = new AbortController();
-      const limite = setTimeout(() => controlador.abort(), 55_000);
-
       const r = await fetch(`/api/caso/${casoId}/future-self`, {
         method: 'POST',
         body: cuerpo,
-        signal: controlador.signal,
       });
-      clearTimeout(limite);
-
       const datos = await r.json();
-      if (r.ok && datos.videoUrl) {
-        setPaso({ t: 'revelado', videoUrl: datos.videoUrl });
-      } else {
+
+      if (!r.ok || !datos.videoId) {
         setPaso({ t: 'fallback', motivo: datos.error });
+        return;
       }
+
+      // HeyGen tarda del orden de 30-60s en renderizar. El polling vive acá,
+      // en el cliente, para no toparse con el techo de 60s de una función
+      // de Vercel — cada consulta de estado es su propia invocación, rápida.
+      const limite = Date.now() + 100_000;
+      while (Date.now() < limite) {
+        await new Promise((resolve) => setTimeout(resolve, 4000));
+        const rEstado = await fetch(
+          `/api/caso/${casoId}/future-self/estado?videoId=${encodeURIComponent(datos.videoId)}`,
+        );
+        const estado = await rEstado.json();
+
+        if (estado.estado === 'completed' && estado.videoUrl) {
+          setPaso({ t: 'revelado', videoUrl: estado.videoUrl });
+          return;
+        }
+        if (estado.fallback) {
+          setPaso({ t: 'fallback', motivo: estado.error });
+          return;
+        }
+        // 'processing' → seguir esperando.
+      }
+      setPaso({ t: 'fallback', motivo: 'El video tardó más de lo esperado.' });
     } catch {
       setPaso({ t: 'fallback' });
     }

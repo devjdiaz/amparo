@@ -17,6 +17,14 @@ function llave(): string {
   return k;
 }
 
+/**
+ * Voz de reserva (premade, "Sarah" — mature, reassuring, confident) para
+ * cuando la clonación no está disponible (plan sin Instant Voice Cloning) o
+ * falla por cualquier otro motivo. El Future Self sigue teniendo voz propia
+ * del mensaje, aunque no sea la del usuario — mejor eso que nada.
+ */
+export const VOZ_DE_RESERVA = 'EXAVITQu4vr4xnSDxMaL';
+
 /** Clona la voz a partir de una muestra corta. Devuelve el voice_id. */
 export async function clonarVoz(muestra: Blob, nombre: string): Promise<string> {
   const form = new FormData();
@@ -24,7 +32,7 @@ export async function clonarVoz(muestra: Blob, nombre: string): Promise<string> 
   form.append('files', muestra, 'muestra.webm');
   form.append('remove_background_noise', 'true');
 
-  const r = await fetch(`${BASE}/v1/voices/ivc/create`, {
+  const r = await fetch(`${BASE}/v1/voices/add`, {
     method: 'POST',
     headers: { 'xi-api-key': llave() },
     body: form,

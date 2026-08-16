@@ -1,17 +1,18 @@
 /**
  * HeyGen — Photo Avatar (Avatar IV) hablando con un audio ya generado.
  *
- * Tres pasos, dos de ellos asíncronos:
- *   1. Subir la foto como asset → url pública en la CDN de HeyGen.
- *   2. Crear el Photo Avatar a partir de esa foto → avatar_id.
- *   3. Subir el audio como asset, generar el video con ese avatar + audio,
- *      y hacer polling hasta que termine → video_url.
+ * Verificado en vivo (16 ago 2026, con llave real): subir assets, crear el
+ * avatar y generar el video funcionan tal como documentado. Pero generar el
+ * video real tardó ~40s — sumado a los pasos previos (clonar voz, texto a
+ * voz, dos subidas, crear avatar) se acerca peligrosamente al techo de 60s
+ * de una función de Vercel. Por eso el pipeline se parte en dos:
  *
- * NOTA para cuando haya llave real: el endpoint de subida de assets
- * (`upload.heygen.com/v1/asset`) y el de creación de avatar (`/v3/avatars`)
- * son los documentados al momento de escribir esto, pero no se pudieron
- * probar sin API key — si HeyGen devuelve una forma distinta, el error
- * completo queda en el mensaje lanzado, visible en los logs del servidor.
+ *   `iniciarVideoAvatar()` — hace todo lo previo y arranca el render, sin
+ *   esperarlo. Rápido (~10-15s), cabe con margen en una sola invocación.
+ *
+ *   `consultarVideo()` — UNA sola consulta de estado, sin loop interno. El
+ *   polling vive en el cliente (ver `experiencia.tsx`), que no tiene techo
+ *   de 60 segundos.
  *
  * Server-only. La llave nunca sale de acá.
  */
@@ -55,61 +56,81 @@ async function crearAvatarDeFoto(urlFoto: string): Promise<string> {
   return datos.data.avatar_item.id;
 }
 
+/**
+ * Crear el Photo Avatar es asíncrono del lado de HeyGen: el `avatar_id`
+ * vuelve con `image_width`/`image_height` en 0 mientras procesa la foto en
+ * segundo plano. Pedir el video antes de que termine falla con
+ * "missing image dimensions" — verificado en vivo, se resuelve solo unos
+ * segundos después. Tres reintentos con espera cubren ese margen sin
+ * acercarse al techo de la función.
+ */
 async function crearVideo(avatarId: string, urlAudio: string): Promise<string> {
-  const r = await fetch(`${BASE}/v3/videos`, {
-    method: 'POST',
-    headers: { 'x-api-key': llave(), 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      type: 'avatar',
-      avatar_id: avatarId,
-      audio_url: urlAudio,
-      resolution: '1080p',
-      aspect_ratio: 'auto',
-      motion_prompt: 'hablando con calma, seguridad y serenidad',
-      expressiveness: 'medium',
-    }),
-  });
-  if (!r.ok) {
-    throw new Error(`HeyGen no pudo iniciar el video: ${r.status} ${await r.text()}`);
+  let ultimoError = '';
+  for (let intento = 0; intento < 4; intento++) {
+    if (intento > 0) await new Promise((r) => setTimeout(r, 3000));
+
+    const r = await fetch(`${BASE}/v3/videos`, {
+      method: 'POST',
+      headers: { 'x-api-key': llave(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'avatar',
+        avatar_id: avatarId,
+        audio_url: urlAudio,
+        resolution: '1080p',
+        aspect_ratio: 'auto',
+        motion_prompt: 'hablando con calma, seguridad y serenidad',
+        expressiveness: 'medium',
+      }),
+    });
+    if (r.ok) {
+      const datos = (await r.json()) as { data: { video_id: string } };
+      return datos.data.video_id;
+    }
+
+    const texto = await r.text();
+    ultimoError = `${r.status} ${texto}`;
+    // Solo reintenta el error de "todavía procesando la foto"; cualquier
+    // otro (auth, avatar inválido) no se arregla esperando.
+    if (!texto.includes('missing image dimensions')) break;
   }
-  const datos = (await r.json()) as { data: { video_id: string } };
-  return datos.data.video_id;
+  throw new Error(`HeyGen no pudo iniciar el video: ${ultimoError}`);
 }
 
-async function esperarVideo(videoId: string, limiteMs: number): Promise<string> {
-  const inicio = Date.now();
-  while (Date.now() - inicio < limiteMs) {
-    const r = await fetch(`${BASE}/v3/videos/${videoId}`, {
-      headers: { 'x-api-key': llave() },
-    });
-    if (!r.ok) throw new Error(`HeyGen no pudo consultar el video: ${r.status}`);
-    const datos = (await r.json()) as {
-      data: { status: string; video_url?: string; error?: unknown };
-    };
-    if (datos.data.status === 'completed' && datos.data.video_url) {
-      return datos.data.video_url;
-    }
-    if (datos.data.status === 'failed') {
-      throw new Error(`HeyGen falló generando el video: ${JSON.stringify(datos.data.error)}`);
-    }
-    await new Promise((r) => setTimeout(r, 4000));
+export type EstadoVideo =
+  | { estado: 'processing' | 'waiting' | 'pending' }
+  | { estado: 'completed'; videoUrl: string }
+  | { estado: 'failed'; motivo: string };
+
+/** Una sola consulta de estado — sin loop. El loop vive en el cliente. */
+export async function consultarVideo(videoId: string): Promise<EstadoVideo> {
+  const r = await fetch(`${BASE}/v3/videos/${videoId}`, {
+    headers: { 'x-api-key': llave() },
+  });
+  if (!r.ok) throw new Error(`HeyGen no pudo consultar el video: ${r.status}`);
+  const datos = (await r.json()) as {
+    data: { status: string; video_url?: string; error?: unknown };
+  };
+  if (datos.data.status === 'completed' && datos.data.video_url) {
+    return { estado: 'completed', videoUrl: datos.data.video_url };
   }
-  throw new Error('HeyGen tardó más de lo que el demo puede esperar.');
+  if (datos.data.status === 'failed') {
+    return { estado: 'failed', motivo: JSON.stringify(datos.data.error) };
+  }
+  return { estado: 'processing' };
 }
 
 /**
- * El pipeline completo: foto + audio ya generado → video final.
- * `limiteMs` acota el polling — quien llama decide cuánto puede esperar.
+ * Sube la foto y el audio, crea el avatar, arranca el render. Devuelve el
+ * `video_id` sin esperar a que termine — quien llama hace el polling con
+ * `consultarVideo()`.
  */
-export async function generarVideoAvatar(
+export async function iniciarVideoAvatar(
   foto: Buffer,
   fotoTipo: string,
   audio: Buffer,
-  limiteMs: number,
 ): Promise<string> {
   const urlFoto = await subirAsset(foto, fotoTipo);
   const avatarId = await crearAvatarDeFoto(urlFoto);
   const urlAudio = await subirAsset(audio, 'audio/mpeg');
-  const videoId = await crearVideo(avatarId, urlAudio);
-  return esperarVideo(videoId, limiteMs);
+  return crearVideo(avatarId, urlAudio);
 }
