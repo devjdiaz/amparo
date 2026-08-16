@@ -21,6 +21,7 @@ import {
 import { validarRedaccion } from './validador';
 import { emitirCertificado, renderCertificado } from './certificado';
 import { huellaDe, verificarHuella } from './huella';
+import { verificarHuellaWeb } from './huella-web';
 
 const HOY = new Date('2026-08-15T12:00:00Z');
 
@@ -430,5 +431,20 @@ describe('huella · el certificado impreso se puede verificar', () => {
   it('la huella queda impresa en el certificado', () => {
     const cert = base();
     expect(renderCertificado(cert)).toContain(cert.huella);
+  });
+
+  // Si estas dos implementaciones divergieran, el botón "verificar acá mismo"
+  // del certificado diría que un documento legítimo está alterado. El sello
+  // dejaría de servir para nada.
+  it('el navegador calcula exactamente la misma huella que el servidor', async () => {
+    const cert = base();
+    const web = await verificarHuellaWeb(cert);
+    expect(web.recalculada).toBe(cert.huella);
+    expect(web.ok).toBe(true);
+  });
+
+  it('el navegador también detecta la alteración', async () => {
+    const web = await verificarHuellaWeb({ ...base(), casoId: 'otro-caso' });
+    expect(web.ok).toBe(false);
   });
 });
