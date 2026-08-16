@@ -17,8 +17,11 @@ export function FaltanDatos({ preguntas }: { preguntas: string[] }) {
     <div className="flex flex-col gap-6">
       <section className="rounded-[28px] border border-[#FFFFFF26] bg-[#FFFFFF0D] p-7">
         <h1 className="font-serif text-[22px] font-semibold text-texto-consola">
-          Me faltan {preguntas.length === 1 ? 'un dato' : `${preguntas.length} datos`} para
-          poder escribir su tutela
+          {/* El verbo concuerda con el número: "Me falta un dato" / "Me faltan 3 datos". */}
+          {preguntas.length === 1
+            ? 'Me falta un dato'
+            : `Me faltan ${preguntas.length} datos`}{' '}
+          para poder escribir su tutela
         </h1>
         <p className="mt-3 max-w-[52ch] text-[16px] leading-7 text-texto-consola-2">
           Prefiero preguntarle antes que suponer. Una tutela con un dato inventado
