@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { RotateCcw } from 'lucide-react';
 import { decidir } from '@/lib/decidir';
 import { redactar } from '@/lib/redactor';
 import { redactarDeterministico } from '@/lib/redactor-deterministico';
@@ -75,6 +76,14 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
         <Link href="/" aria-label="Volver al inicio" className="shrink-0">
           <Marca />
         </Link>
+        <Link
+          href="/"
+          aria-label="Nuevo caso"
+          className="flex shrink-0 items-center gap-1.5 text-[13px] text-texto-consola-2 hover:text-texto-consola"
+        >
+          <RotateCcw className="size-3.5 shrink-0" aria-hidden />
+          <span className="hidden sm:inline">Nuevo caso</span>
+        </Link>
         <div className="min-w-0 flex-1">
           <Stepper activo="Resultado" tono={enrutando ? 'ambar' : 'verde'} />
         </div>
@@ -96,6 +105,7 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           motivoFallback: redaccion?.motivoFallback,
           entidad: valor(caso.expediente.entidad) ?? 'la EPS',
           servicio: valor(caso.expediente.servicio) ?? 'el servicio de salud requerido',
+          expediente: caso.expediente,
         }}
       />
     </main>

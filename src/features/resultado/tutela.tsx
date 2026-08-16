@@ -154,7 +154,7 @@ function desmayuscular(s: string): string {
  * superíndice discreto —como la nota al pie de un documento serio— y en papel
  * desaparecen, porque ahí la trazabilidad vive en el certificado adjunto.
  */
-function ConMarcas({ texto }: { texto: string }) {
+export function ConMarcas({ texto }: { texto: string }) {
   const trozos = texto.split(/(\[#[a-zA-Z0-9_-]+\])/g);
 
   return (

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, RotateCcw } from 'lucide-react';
 import { decidir } from '@/lib/decidir';
 import { CASOS } from '@/fixtures/casos';
 import { cargarCaso } from '@/lib/caso';
@@ -41,6 +41,14 @@ export default async function Analisis({ params }: { params: Promise<{ id: strin
       <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-[#14201C0D] bg-[#14201C08] px-4 py-3 backdrop-blur-xl sm:gap-6 sm:px-6 md:gap-8 md:px-10 md:py-4">
         <Link href="/" aria-label="Volver al inicio" className="shrink-0">
           <Marca />
+        </Link>
+        <Link
+          href="/"
+          aria-label="Nuevo caso"
+          className="flex shrink-0 items-center gap-1.5 text-[13px] text-texto-consola-2 hover:text-texto-consola"
+        >
+          <RotateCcw className="size-3.5 shrink-0" aria-hidden />
+          <span className="hidden sm:inline">Nuevo caso</span>
         </Link>
         <div className="min-w-0 flex-1">
           <Stepper activo="Procedibilidad" tono={enrutando ? 'ambar' : 'verde'} />

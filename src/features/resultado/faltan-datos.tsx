@@ -1,4 +1,5 @@
-import { MessageCircleQuestion } from 'lucide-react';
+import Link from 'next/link';
+import { MessageCircleQuestion, RotateCcw } from 'lucide-react';
 
 /**
  * Cuando el expediente no alcanza, AMPARO no adivina: pregunta.
@@ -31,7 +32,7 @@ export function FaltanDatos({ preguntas }: { preguntas: string[] }) {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-[16px] font-semibold text-texto-consola">
-          Respóndame esto y sigo
+          Esto es lo que falta saber
         </h2>
 
         <ol className="flex flex-col gap-3">
@@ -57,6 +58,24 @@ export function FaltanDatos({ preguntas }: { preguntas: string[] }) {
         Ninguna de estas preguntas se asume por defecto. En la de tutela previa,
         suponer que no hubo podría costarle una sanción por temeridad.
       </p>
+
+      {/* Todavía no hay formulario para responder acá mismo: hay que volver a
+          contar el caso, esta vez incluyendo lo que falta. Decirlo, en vez de
+          dejar la pantalla pareciendo un formulario a medio construir. */}
+      <section className="rounded-[18px] border border-[#14201C1A] bg-[#14201C08] p-5">
+        <p className="text-[14px] leading-6 text-texto-consola-2">
+          Por ahora no hay dónde responder esto aquí mismo. Vuelva a grabar o
+          escribir su caso, esta vez contando también estos datos.
+        </p>
+        <Link
+          href="/"
+          data-boton
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700 sm:w-auto sm:justify-start"
+        >
+          <RotateCcw className="size-4" aria-hidden />
+          Grabar de nuevo, con esto también
+        </Link>
+      </section>
     </div>
   );
 }

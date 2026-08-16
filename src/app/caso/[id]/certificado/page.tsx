@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Cpu, FileSearch, Hash, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Calendar, Cpu, FileSearch, Hash, RotateCcw, ShieldCheck } from 'lucide-react';
 import { decidir } from '@/lib/decidir';
 import { CASOS } from '@/fixtures/casos';
 import { cargarCaso } from '@/lib/caso';
@@ -72,6 +72,14 @@ export default async function CertificadoPage({
         >
           <ArrowLeft className="size-4" aria-hidden />
           Volver al resultado
+        </Link>
+        <Link
+          href="/"
+          aria-label="Nuevo caso"
+          className="flex shrink-0 items-center gap-1.5 text-[13px] text-texto-consola-2 hover:text-texto-consola"
+        >
+          <RotateCcw className="size-3.5 shrink-0" aria-hidden />
+          <span className="hidden sm:inline">Nuevo caso</span>
         </Link>
         <span className="ml-auto flex shrink-0 items-center gap-2 rounded-full bg-[#12735A22] px-4 py-1.5">
           <ShieldCheck className="size-4 text-verde-400" aria-hidden />

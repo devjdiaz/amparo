@@ -6,6 +6,7 @@ import { FileSearch } from 'lucide-react';
 import type { Procedibilidad, RutaAlterna } from '../../../motor/compuertas';
 import type { Recuperacion } from '../../../motor/recuperador';
 import type { Validacion } from '../../../motor/validador';
+import type { Expediente } from '../../../motor/tipos';
 import { Aduana } from './aduana';
 import { Interruptores, type EstadoInterruptores } from './interruptores';
 import { PanelJurisprudencia } from './jurisprudencia';
@@ -40,6 +41,8 @@ export interface DatosResultado {
   /** Datos de encabezado del documento. */
   entidad: string;
   servicio: string;
+  /** El expediente completo, para generar la ruta alterna (derecho de petición). */
+  expediente: Expediente;
 }
 
 export function VistaResultado({ datos }: { datos: DatosResultado }) {
@@ -75,7 +78,11 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
           />
         )}
         {datos.salida === 'NO_PROCEDE' && (
-          <NoProcede rutas={datos.rutas} motivo={motivoFalla} />
+          <NoProcede
+            rutas={datos.rutas}
+            motivo={motivoFalla}
+            expediente={datos.expediente}
+          />
         )}
         {datos.salida === 'FALTAN_DATOS' && <FaltanDatos preguntas={datos.preguntas} />}
       </div>

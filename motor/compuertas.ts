@@ -122,7 +122,10 @@ export function legitimacion(exp: Expediente): ResultadoCompuerta {
       accion: 'Que la firme la persona afectada',
       comoSeHace:
         'El escrito sale igual. Solo cambia quién lo firma y quién lo radica. También sirve un poder si usted prefiere hacer el trámite.',
-      generable: true,
+      // Reutilizaría la misma redacción de la tutela, pero esa solo se
+      // genera cuando la salida es PROCEDE — acá nunca corrió. No hay texto
+      // que ofrecer todavía, así que no se promete un botón que no hace nada.
+      generable: false,
     },
   };
 }
@@ -189,7 +192,10 @@ export function inmediatez(exp: Expediente, hoy: Date): ResultadoCompuerta {
       accion: 'Queja ante la Superintendencia Nacional de Salud',
       comoSeHace:
         'La queja no tiene término de caducidad y sirve para que quede el antecedente contra la EPS.',
-      generable: true,
+      // Ruta real, pero AMPARO todavía no redacta este documento — a
+      // diferencia del derecho de petición, que sí. Declarar la diferencia
+      // en vez de mostrar un botón que no hace nada.
+      generable: false,
     },
   };
 }

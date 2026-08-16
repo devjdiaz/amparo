@@ -1,5 +1,11 @@
+'use client';
+
+import { useState } from 'react';
 import { ArrowRight, Building2, FilePen, Landmark } from 'lucide-react';
 import type { RutaAlterna } from '../../../motor/compuertas';
+import type { Expediente } from '../../../motor/tipos';
+import { redactarDerechoPeticion } from '../../lib/redactor-deterministico';
+import { DerechoPeticion } from './derecho-peticion';
 
 /**
  * Pantalla del caso improcedente. La decisión de diseño más importante del
@@ -20,11 +26,15 @@ const ICONO_RUTA = [FilePen, Building2, Landmark];
 export function NoProcede({
   rutas,
   motivo,
+  expediente,
 }: {
   rutas: RutaAlterna[];
   /** El motivo de la compuerta que falló, en lenguaje llano. Sin jerga. */
   motivo: string;
+  expediente: Expediente;
 }) {
+  const [generada, setGenerada] = useState<string | null>(null);
+
   return (
     <div className="flex flex-col gap-6">
       {/* --- El no, explicado --------------------------------------------- */}
@@ -80,9 +90,14 @@ export function NoProcede({
                 <button
                   type="button"
                   data-boton
+                  onClick={() =>
+                    setGenerada(
+                      generada === ruta.accion ? null : ruta.accion,
+                    )
+                  }
                   className="flex w-full shrink-0 items-center justify-center gap-2 rounded-full bg-verde-600 px-5 text-[13px] font-semibold text-papel transition hover:bg-verde-700 sm:ml-auto sm:w-auto sm:self-center"
                 >
-                  Generar
+                  {generada === ruta.accion ? 'Ocultar' : 'Generar'}
                   <ArrowRight className="size-3.5" aria-hidden />
                 </button>
               )}
@@ -90,6 +105,10 @@ export function NoProcede({
           );
         })}
       </section>
+
+      {generada && (
+        <DerechoPeticion texto={redactarDerechoPeticion(expediente)} />
+      )}
 
       {/*
         La frase que cierra. Es la marca entera en una línea: el sistema no

@@ -128,3 +128,84 @@ export function redactarDeterministico(exp: Expediente, fuerza: Fuerza | null): 
 
   return partes.join('\n');
 }
+
+/**
+ * Derecho de petición a la EPS — la ruta alterna cuando la tutela falla por
+ * subsidiariedad (`exp.solicitudFormalPrevia === false`).
+ *
+ * Mismo espíritu que `redactarDeterministico`: sin modelo, sin red, cada
+ * hecho sale de un campo del expediente. Es justo el documento que, una vez
+ * radicado, hace que `solicitudFormalPrevia` pase a `true` — por eso el pie
+ * dice que si no responden en 15 días, ahí sí procede la tutela.
+ */
+export function redactarDerechoPeticion(exp: Expediente): string {
+  const partes: string[] = [];
+  const entidad = valor(exp.entidad) ?? 'la EPS';
+  const servicio = valor(exp.servicio) ?? 'el servicio de salud requerido';
+
+  partes.push('Bogotá D.C.');
+  partes.push('');
+  partes.push('Señores');
+  partes.push(entidad.toUpperCase());
+  partes.push('Referencia: derecho de petición');
+  partes.push('');
+  partes.push(
+    '[NOMBRE DEL PETICIONARIO], identificado con cédula de ciudadanía No. ' +
+      '[NÚMERO], en ejercicio del derecho de petición consagrado en el ' +
+      'artículo 23 de la Constitución Política y reglamentado por la Ley ' +
+      '1755 de 2015, respetuosamente solicito:',
+  );
+
+  partes.push('');
+  partes.push('I. HECHOS');
+  partes.push('');
+
+  if (exp.ordenMedicaVigente && valor(exp.ordenMedicaVigente) === true) {
+    partes.push(
+      `PRIMERO. Mi médico tratante ordenó ${servicio}${conMarca(exp.ordenMedicaVigente)}${conMarca(exp.servicio)}.`,
+    );
+  } else {
+    partes.push(`PRIMERO. Requiero ${servicio}${conMarca(exp.servicio)}.`);
+  }
+
+  const fecha = valor(exp.fechaVulneracion);
+  const tipo = valor(exp.tipoNegacion);
+  if (fecha) {
+    partes.push(
+      `SEGUNDO. El ${enEspanol(fecha)}, ${entidad} me comunicó ` +
+        `${tipo ? `la ${tipo}` : 'la negativa'} del servicio` +
+        `${conMarca(exp.fechaVulneracion)}${conMarca(exp.tipoNegacion)}.`,
+    );
+  }
+
+  partes.push(
+    'TERCERO. No he elevado hasta ahora una solicitud formal por escrito, ' +
+      'por lo que radico esta petición como el paso previo que exige la ley ' +
+      'antes de acudir a otras instancias.',
+  );
+
+  partes.push('');
+  partes.push('II. PETICIÓN');
+  partes.push('');
+  partes.push(
+    `Solicito de manera respetuosa que se autorice y preste ${servicio} de ` +
+      'forma inmediata, dada la afectación descrita.',
+  );
+
+  partes.push('');
+  partes.push('III. FUNDAMENTOS DE DERECHO');
+  partes.push('');
+  partes.push(
+    'Artículo 23 de la Constitución Política. Ley 1755 de 2015, que ' +
+      'reglamenta el derecho de petición. Ley 1751 de 2015, Estatutaria de ' +
+      'Salud.',
+  );
+
+  partes.push('');
+  partes.push(
+    'Solicito respuesta dentro de los quince (15) días hábiles siguientes a ' +
+      'la radicación, conforme al artículo 14 de la Ley 1437 de 2011.',
+  );
+
+  return partes.join('\n');
+}
