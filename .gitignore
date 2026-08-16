@@ -27,3 +27,4 @@ pnpm-debug.log*
 # interna del equipo: el repo de otro proyecto y el desarme de por qué ganó.
 # Sigue vivo en el vault de Obsidian; simplemente no se publica.
 06 Arsenal/
+.vercel
