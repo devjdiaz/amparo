@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { decidir } from '@/lib/decidir';
 import { redactar } from '@/lib/redactor';
 import { redactarDeterministico } from '@/lib/redactor-deterministico';
-import { casoPorId, CASOS } from '@/fixtures/casos';
+import { CASOS } from '@/fixtures/casos';
+import { cargarCaso } from '@/lib/caso';
 import { fechaCorte } from '@/lib/entorno';
 import { valor } from '../../../../../motor/tipos';
 import { Marca } from '@/features/shell/marca';
@@ -25,7 +26,7 @@ export function generateStaticParams() {
 
 export default async function Resultado({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caso = casoPorId(id);
+  const caso = await cargarCaso(id);
   if (!caso) notFound();
 
   const d = decidir(caso.expediente, caso.hechos, { casoId: caso.id, hoy: fechaCorte() });

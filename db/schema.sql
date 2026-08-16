@@ -16,8 +16,14 @@ create table if not exists casos (
   transcripcion  text,
   audio_url      text,
   confianza      real,              -- la que reporta Whisper
+  -- Vista estructurada del caso. Cada campo viaja como {valor, hecho}: el id
+  -- del hecho que lo sostiene. Un campo sin hecho no puede existir, y el hecho
+  -- no puede existir sin origen (ver la tabla de abajo).
+  expediente     jsonb,
   creado_en      timestamptz not null default now()
 );
+
+alter table casos add column if not exists expediente jsonb;
 
 -- ---------------------------------------------------------------------------
 -- LA TABLA QUE SOSTIENE LA TESIS.

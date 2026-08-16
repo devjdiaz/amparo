@@ -95,11 +95,19 @@ export const CORPUS: SentenciaCorpus[] = [
       'El principio de oportunidad obliga a que toda persona acceda a la prestación sin dilaciones, en el momento oportuno y bajo las condiciones que defina el médico tratante. Solo razones estrictamente médicas justifican un retraso: no programar oportunamente las consultas con especialistas vulnera el derecho a la salud.',
     textual:
       'este obliga a garantizar que toda persona pueda acceder a la prestación de servicios sin dilaciones, en el momento oportuno para recuperar su salud y bajo las condiciones definidas por el médico tratante. Solo razones estrictamente médicas justifican un retraso en la prestación del servicio',
+    // Cita Y consulta: la sentencia usa las dos palabras ("programación de
+    // cita con endocrinología", "no programar oportunamente las consultas con
+    // especialistas"). Tener solo una hacía que el puntaje dependiera de qué
+    // palabra le saliera al extractor, que es una lotería que no queremos.
     etiquetas: [
       'cita',
+      'consulta',
       'especialista',
+      'especializada',
       'demora',
+      'dilacion',
       'agendamiento',
+      'programacion',
       'autorizacion previa',
       'oportunidad',
       'adulto mayor',
@@ -116,6 +124,7 @@ export const CORPUS: SentenciaCorpus[] = [
       'aunque la EPS cumple con la obligación de ofrecer los servicios de salud, el acceso efectivo a ellos puede verse obstaculizado por la inoportunidad en la gestión por parte de sus prestadores, es decir, por asuntos netamente administrativos. En este contexto, es fundamental que la EPS no solo brinde los servicios, sino que también garantice la atención, de manera efectiva y oportuna.',
     etiquetas: [
       'inoportunidad',
+      'demora',
       'gestion del prestador',
       'barrera administrativa',
       'acceso efectivo',
@@ -135,7 +144,10 @@ export const CORPUS: SentenciaCorpus[] = [
     etiquetas: [
       'medicamento',
       'entrega',
+      'suministro',
+      'formula',
       'oncologico',
+      'cancer',
       'enfermedad catastrofica',
       'autonomia medica',
       'tratamiento ininterrumpido',

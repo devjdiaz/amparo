@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Cpu, FileSearch, Hash, ShieldCheck } from 'lucide-react';
 import { decidir } from '@/lib/decidir';
-import { casoPorId, CASOS } from '@/fixtures/casos';
+import { CASOS } from '@/fixtures/casos';
+import { cargarCaso } from '@/lib/caso';
 import { fechaCorte } from '@/lib/entorno';
 import { MODELO } from '@/lib/redactor';
 import { Marca } from '@/features/shell/marca';
@@ -28,7 +29,7 @@ export default async function CertificadoPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const caso = casoPorId(id);
+  const caso = await cargarCaso(id);
   if (!caso) notFound();
 
   const d = decidir(caso.expediente, caso.hechos, { casoId: caso.id, hoy: fechaCorte() });

@@ -1,5 +1,6 @@
-import { AudioLines, Mic, PenLine } from 'lucide-react';
+import { AudioLines } from 'lucide-react';
 import { Marca } from '@/features/shell/marca';
+import { Grabador } from '@/features/entrada/grabador';
 
 /**
  * Pantalla 01 · Entrada de voz.
@@ -30,53 +31,7 @@ export default function Inicio() {
       </header>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 pb-16">
-        {/* --- Botón de grabación --------------------------------------- */}
-        <div className="relative grid size-40 place-items-center">
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background:
-                'radial-gradient(circle, #4FB39440 0%, #4FB39400 70%)',
-            }}
-            aria-hidden
-          />
-          <button
-            type="button"
-            className="relative grid size-24 place-items-center rounded-full bg-verde-600 transition hover:bg-verde-700"
-            style={{ boxShadow: '0 0 30px #12735A88' }}
-          >
-            <Mic className="size-10 text-papel" strokeWidth={1.8} aria-hidden />
-            <span className="sr-only">Grabar una nota de voz</span>
-          </button>
-        </div>
-
-        {/* --- Encabezado ------------------------------------------------ */}
-        <div className="flex flex-col items-center gap-3 text-center">
-          <h1 className="font-serif text-[32px] font-semibold text-texto-consola">
-            Cuéntenos su caso
-          </h1>
-          <p className="max-w-[480px] text-[16px] leading-6 text-texto-consola-3">
-            Grabe una nota de voz describiendo lo que pasó. Sin formalidades, en
-            sus palabras.
-          </p>
-        </div>
-
-        {/* --- Alternativa por escrito ----------------------------------- */}
-        <div className="flex w-[400px] items-center gap-4" aria-hidden>
-          <span className="h-px flex-1 bg-[#FFFFFF15]" />
-          <span className="text-[13px] text-texto-consola-3">o</span>
-          <span className="h-px flex-1 bg-[#FFFFFF15]" />
-        </div>
-
-        <label className="flex w-[480px] items-center gap-3 rounded-[22px] bg-[#FFFFFF0D] px-5 py-3.5 outline outline-[#FFFFFF15]">
-          <PenLine className="size-[18px] shrink-0 text-texto-consola-3" aria-hidden />
-          <span className="sr-only">Escriba los hechos de su caso</span>
-          <input
-            type="text"
-            placeholder="Escriba los hechos de su caso aquí..."
-            className="w-full bg-transparent text-[15px] text-texto-consola placeholder:text-texto-consola-3 focus:outline-none"
-          />
-        </label>
+        <Grabador />
 
         <p className="flex items-center gap-2 text-[13px] text-texto-consola-3">
           <AudioLines className="size-4" aria-hidden />

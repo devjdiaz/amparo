@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { decidir } from '@/lib/decidir';
-import { casoPorId, CASOS } from '@/fixtures/casos';
+import { CASOS } from '@/fixtures/casos';
+import { cargarCaso } from '@/lib/caso';
 import { fechaCorte } from '@/lib/entorno';
 import { Marca } from '@/features/shell/marca';
 import { Stepper } from '@/features/shell/stepper';
@@ -23,7 +24,7 @@ export function generateStaticParams() {
 export default async function Analisis({ params }: { params: Promise<{ id: string }> }) {
   // Next 16: params es una Promise.
   const { id } = await params;
-  const caso = casoPorId(id);
+  const caso = await cargarCaso(id);
   if (!caso) notFound();
 
   const d = decidir(caso.expediente, caso.hechos, { casoId: caso.id, hoy: fechaCorte() });

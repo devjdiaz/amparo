@@ -39,6 +39,24 @@ import { Fuerza } from './fuerza';
  *         y después de bajar el encuadre jurídico genérico de `etiquetas` a
  *         `tema`/`subregla` en el corpus. Eso último triplicó el margen.
  *
+ * MEDICIÓN EN VIVO, que es la que manda:
+ *
+ * Los expedientes de referencia están escritos a mano y usan el vocabulario
+ * "correcto". El extractor real, leyendo habla, produce consultas más flacas:
+ * donde el fixture dice "cita con especialista en neurología", la extracción
+ * de la misma grabación dijo "consulta con neurología". Los términos `cita` y
+ * `especialista` —los más fuertes de T-377/24— desaparecían.
+ *
+ *     con el corpus original      T-377/24 = 0.434   (margen 0.03, muy justo)
+ *     tras enriquecer etiquetas   T-377/24 = 0.490   (margen 0.09)
+ *     lo más alto que no cita     T-252/24 = 0.334
+ *
+ * 0.40 queda casi exacto en el punto medio de los números EN VIVO. El arreglo
+ * de fondo no fue mover el umbral: fue curar el corpus con el vocabulario que
+ * cada sentencia usa de verdad — T-377/24 habla de "cita" Y de "consulta", y
+ * solo teníamos una. El puntaje dependía de qué palabra le saliera al
+ * extractor, que es una lotería que no queremos.
+ *
  * Se recalibra cada vez que entra o sale una sentencia, o cambia un
  * expediente de referencia.
  */
