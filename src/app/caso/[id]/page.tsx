@@ -51,7 +51,7 @@ export default async function Analisis({ params }: { params: Promise<{ id: strin
           <span className="hidden sm:inline">Nuevo caso</span>
         </Link>
         <div className="min-w-0 flex-1">
-          <Stepper activo="Procedibilidad" tono={enrutando ? 'ambar' : 'verde'} />
+          <Stepper activo="Procedibilidad" tono={enrutando ? 'ambar' : 'verde'} casoId={caso.id} />
         </div>
       </header>
 
