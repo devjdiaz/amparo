@@ -116,3 +116,22 @@ a[data-boton] {
   outline: 2px solid var(--color-verde-400);
   outline-offset: 2px;
 }
+
+/* Future Self: transiciones cinematográficas, no efectos de "IA genérica".
+   Solo opacidad y un desplazamiento mínimo — calma, no espectáculo. */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+  }
+}

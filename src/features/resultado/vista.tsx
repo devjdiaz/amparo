@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FileSearch } from 'lucide-react';
+import { FileSearch, Sparkles } from 'lucide-react';
 import type { Procedibilidad, PreguntaPendiente, RutaAlterna } from '../../../motor/compuertas';
 import type { Recuperacion } from '../../../motor/recuperador';
 import type { Validacion } from '../../../motor/validador';
@@ -113,6 +113,17 @@ export function VistaResultado({ datos }: { datos: DatosResultado }) {
 
         {datos.salida === 'PROCEDE' && (
           <Interruptores estado={estado} onCambio={setEstado} />
+        )}
+
+        {datos.salida !== 'FALTAN_DATOS' && (
+          <Link
+            href={`/caso/${datos.casoId}/future-self`}
+            data-boton
+            className="flex items-center justify-center gap-2 rounded-[18px] bg-verde-600 px-5 text-[13px] font-semibold text-papel shadow-[0_4px_24px_rgba(18,115,90,0.35)] transition hover:bg-verde-700"
+          >
+            <Sparkles className="size-4" aria-hidden />
+            Mire hacia adelante — active su Future Self
+          </Link>
         )}
 
         <Link

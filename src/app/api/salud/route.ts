@@ -28,6 +28,15 @@ const ESPERADAS: { nombre: string; empiezaPor?: string }[] = [
   { nombre: 'FECHA_CORTE' },
 ];
 
+/**
+ * Opcionales: Future Self cae al fallback sin ellas, así que su ausencia
+ * NUNCA cuenta para `ok`. Van aparte para que nadie las lea como un problema.
+ */
+const OPCIONALES: { nombre: string; empiezaPor?: string }[] = [
+  { nombre: 'HEYGEN_API_KEY' },
+  { nombre: 'ELEVENLABS_API_KEY' },
+];
+
 export async function GET() {
   const variables = ESPERADAS.map(({ nombre, empiezaPor }) => {
     const v = process.env[nombre];
@@ -41,16 +50,21 @@ export async function GET() {
   });
 
   // Nombres parecidos a los esperados, para cazar el error de tipeo clásico.
-  const esperados = new Set(ESPERADAS.map((e) => e.nombre));
+  const esperados = new Set([...ESPERADAS, ...OPCIONALES].map((e) => e.nombre));
   const sospechosas = Object.keys(process.env).filter(
     (k) =>
       !esperados.has(k) &&
-      /^(NEXT_PUBLIC_SUPA|SUPA|ANT|OPEN|MODO|FECHA)/i.test(k),
+      /^(NEXT_PUBLIC_SUPA|SUPA|ANT|OPEN|MODO|FECHA|HEY|ELEVEN)/i.test(k),
   );
 
   const base = await pingBase().catch((e) => ({
     ok: false,
     detalle: e instanceof Error ? e.message : String(e),
+  }));
+
+  const opcionales = OPCIONALES.map(({ nombre }) => ({
+    nombre,
+    existe: Boolean(process.env[nombre]),
   }));
 
   const faltan = variables.filter((v) => !v.existe).map((v) => v.nombre);
@@ -67,5 +81,8 @@ export async function GET() {
     modoFixture: MODO_FIXTURE,
     corpus: CORPUS_VERSION,
     node: process.version,
+    /** Future Self. Su ausencia no afecta `ok`. */
+    opcionales,
+    futureSelfActivo: opcionales.every((o) => o.existe),
   });
 }

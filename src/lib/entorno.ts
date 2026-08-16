@@ -38,5 +38,15 @@ export function tieneSupabase(): boolean {
   return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && secreta);
 }
 
+/** Future Self: avatar hablado a partir de una foto. Sin llave, cae al fallback. */
+export function tieneHeyGen(): boolean {
+  return Boolean(process.env.HEYGEN_API_KEY);
+}
+
+/** Future Self: voz clonada del usuario. Sin llave, cae al fallback. */
+export function tieneElevenLabs(): boolean {
+  return Boolean(process.env.ELEVENLABS_API_KEY);
+}
+
 /** Versión del corpus, para que viaje al certificado. */
 export const CORPUS_VERSION = process.env.CORPUS_VERSION ?? '2026-08-16';
