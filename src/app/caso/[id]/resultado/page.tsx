@@ -5,7 +5,7 @@ import { redactar } from '@/lib/redactor';
 import { redactarDeterministico } from '@/lib/redactor-deterministico';
 import { CASOS } from '@/fixtures/casos';
 import { cargarCaso } from '@/lib/caso';
-import { fechaCorte } from '@/lib/entorno';
+import { fechaCorte, MODO_FIXTURE } from '@/lib/entorno';
 import { valor } from '../../../../../motor/tipos';
 import { Marca } from '@/features/shell/marca';
 import { Stepper } from '@/features/shell/stepper';
@@ -50,7 +50,15 @@ export default async function Resultado({ params }: { params: Promise<{ id: stri
           memoria: caso.memoria,
           fuerza: d.fuerza,
           recuperacion: d.recuperacion,
-          forzarModelo: true,
+          // MODO_FIXTURE decide si el BUILD toca la red.
+          //
+          //   false → el build llama a Claude y hornea la redacción real.
+          //   true  → el build no toca nada; queda el texto determinístico.
+          //
+          // El segundo existe para que un despliegue pueda salir sin llaves y
+          // sin conexión, con el producto completo aunque más feo. Es la misma
+          // regla del interruptor 2, aplicada al momento de construir.
+          forzarModelo: !MODO_FIXTURE,
         })
       : null;
 

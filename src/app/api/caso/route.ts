@@ -20,8 +20,14 @@ import { extraer } from '@/lib/extraer';
 import { supabase } from '@/lib/supabase';
 import { fechaCorte } from '@/lib/entorno';
 
-/** El pipeline llama a dos modelos: necesita más que el default de Vercel. */
-export const maxDuration = 120;
+/**
+ * El pipeline encadena dos modelos: Whisper (10–20s) y la extracción (15–25s).
+ * Con el default de 10s no alcanza ni de cerca.
+ *
+ * 60 y no más porque ese es el techo del plan gratuito de Vercel: pedir 120
+ * ahí no da más tiempo, falla el despliegue. Si el plan sube, esto sube.
+ */
+export const maxDuration = 60;
 
 const MAX_BYTES = 25 * 1024 * 1024; // el límite de la API de Whisper
 
